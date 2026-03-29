@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Africa Democracy &amp; Sovereignty Index</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf9f6;--bg2:#f3f1ec;--bg3:#ede9e1;--surface:#ffffff;--border:#ddd8cf;--border-light:#ece8e0;--text:#1a1714;--text-2:#4a4540;--text-3:#8a8078;--text-4:#b5afa6;--gold:#c8881a;--gold-light:#f5e6c8;--gold-mid:#e8b86d;--terra:#b5402a;--terra-light:#f5ddd8;--forest:#2d6e3e;--forest-light:#daeee2;--indigo:#2c5282;--proc:#c8881a;--proc-bg:#fef3dc;--legit:#b5402a;--legit-bg:#fdeee9;--sov:#2c5282;--sov-bg:#e8f0fb;--radius:8px;--radius-sm:5px;--shadow:0 1px 4px rgba(0,0,0,0.07),0 4px 16px rgba(0,0,0,0.04);--shadow-md:0 2px 8px rgba(0,0,0,0.1),0 8px 32px rgba(0,0,0,0.06);}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;line-height:1.5;min-height:100vh;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;}
+.kente{height:4px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 20px,var(--terra) 20px,var(--terra) 40px,var(--forest) 40px,var(--forest) 60px,var(--indigo) 60px,var(--indigo) 80px);}
+.header{background:var(--bg);border-bottom:1px solid var(--border);padding:12px 24px 10px;display:flex;align-items:stretch;min-height:78px;gap:0;flex-shrink:0;}
+.header-brand{display:flex;align-items:center;gap:14px;padding-right:24px;border-right:1px solid var(--border);flex-shrink:0;}
+.brand-icon{width:34px;height:34px;background:var(--gold);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;color:white;flex-shrink:0;}
+.brand-name{font-family:'DM Serif Display',serif;font-size:16px;line-height:1.1;}
+.brand-sub{font-size:11px;color:var(--text-3);margin-top:1px;}
+.corr-banner{flex:1;display:flex;align-items:center;padding:0 24px;gap:20px;background:var(--bg2);margin:10px 0 10px 24px;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.corr-hypothesis{font-size:12px;color:var(--text-2);font-style:italic;flex:1;}
+.corr-hypothesis em{font-style:normal;font-weight:600;color:var(--text);}
+.corr-stat{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.corr-label{font-size:11px;color:var(--text-3);}
+.corr-value{font-family:'DM Mono',monospace;font-size:20px;font-weight:500;min-width:56px;text-align:center;}
+.corr-interp{font-size:11px;padding:3px 9px;border-radius:20px;font-weight:500;}
+.corr-interp.strong-neg{background:var(--terra-light);color:var(--terra);}
+.corr-interp.weak-neg{background:var(--gold-light);color:var(--gold);}
+.corr-interp.neutral{background:var(--bg3);color:var(--text-3);}
+.corr-interp.weak-pos,.corr-interp.strong-pos{background:var(--forest-light);color:var(--forest);}
+.header-actions{display:flex;align-items:center;gap:8px;padding-left:20px;border-left:1px solid var(--border);margin-left:20px;flex-shrink:0;}
+.axis-badge{display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;}
+.axis-badge .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 360px;flex:1 1 auto;min-height:calc(100vh - 68px);overflow:visible;align-items:start;}
+.scatter-pane{display:flex;flex-direction:column;padding:8px 20px 18px;border-right:1px solid var(--border);overflow:visible;background:var(--bg);min-width:0;min-height:0;}
+.controls{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap;}
+.ctrl-group{display:flex;align-items:center;gap:6px;}
+.ctrl-label{font-size:11px;color:var(--text-3);font-weight:500;white-space:nowrap;}
+select.ctrl-select{background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:5px 8px;border-radius:var(--radius-sm);cursor:pointer;outline:none;box-shadow:0 1px 3px rgba(0,0,0,0.06);}
+select.ctrl-select:focus{border-color:var(--gold);}
+.weight-section{margin-left:auto;display:flex;align-items:center;gap:10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:5px 12px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.weight-label-main{font-size:11px;color:var(--text-3);font-weight:500;white-space:nowrap;}
+.weight-row{display:flex;align-items:center;gap:5px;}
+.weight-axis-label{font-size:11px;color:var(--text-2);white-space:nowrap;min-width:30px;}
+input[type=range]{-webkit-appearance:none;width:60px;height:3px;background:var(--bg3);border-radius:2px;outline:none;}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:var(--gold);cursor:pointer;border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.2);}
+.weight-readout{font-family:'DM Mono',monospace;font-size:11px;color:var(--text-3);min-width:26px;}
+.quadrant-shift{font-size:11px;color:var(--terra);font-weight:500;white-space:nowrap;opacity:0;transition:opacity 0.3s;}
+.quadrant-shift.visible{opacity:1;}
+.controls-sub{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.reset-btn{padding:4px 10px;background:none;border:1px solid var(--border);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:11px;color:var(--text-3);cursor:pointer;transition:all 0.15s;white-space:nowrap;margin-left:auto;}
+.reset-btn:hover{border-color:var(--terra);color:var(--terra);}
+.suggested-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap;}
+.suggested-label{font-size:11px;color:var(--text-3);font-weight:500;flex-shrink:0;}
+.suggest-chip{font-size:11px;padding:4px 10px;border-radius:20px;background:var(--surface);border:1px solid var(--border);cursor:pointer;color:var(--text-2);transition:all 0.15s;white-space:nowrap;box-shadow:0 1px 2px rgba(0,0,0,0.05);}
+.suggest-chip:hover{background:var(--gold-light);border-color:var(--gold-mid);color:var(--gold);}
+.canvas-wrap{position:relative;flex:0 0 auto;height:620px;min-height:620px;background:var(--surface);border-radius:6px;border:1px solid var(--border);box-shadow:0 1px 3px rgba(0,0,0,0.05);overflow:hidden;margin-bottom:10px;}
+canvas#scatter{width:100%;height:100%;cursor:crosshair;display:block;}
+.quad-label{position:absolute;font-size:10px;color:var(--text-4);pointer-events:none;line-height:1.4;font-weight:500;}
+.ql-tl{top:10px;left:12px;}.ql-tr{top:10px;right:12px;text-align:right;}
+.ql-bl{bottom:10px;left:12px;}.ql-br{bottom:10px;right:12px;text-align:right;}
+.tooltip{position:absolute;background:var(--surface);border:1px solid var(--border);border-top:3px solid var(--gold);padding:12px 16px;border-radius:var(--radius-sm);font-size:12px;pointer-events:none;display:none;z-index:100;min-width:190px;box-shadow:var(--shadow-md);}
+.tt-name{font-family:'DM Serif Display',serif;font-size:15px;margin-bottom:8px;}
+.tt-row{display:flex;justify-content:space-between;gap:16px;margin:3px 0;}
+.tt-key{color:var(--text-3);}.tt-val{font-weight:600;font-family:'DM Mono',monospace;}
+.tt-divider{border:none;border-top:1px solid var(--border-light);margin:6px 0;}
+.tt-shift{font-size:10px;margin-top:4px;font-style:italic;}
+.tt-shift.up{color:var(--forest);}.tt-shift.dn{color:var(--terra);}.tt-shift.flat{color:var(--text-4);}
+.legend{display:flex;gap:12px;flex-wrap:wrap;background:var(--surface);padding:7px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);margin-bottom:6px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text-3);font-weight:500;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.right-panel{display:flex;flex-direction:column;background:var(--surface);overflow:hidden;min-height:calc(100vh - 68px);max-height:calc(100vh - 68px);position:sticky;top:68px;align-self:start;}
+.panel-tabs{display:flex;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--bg2);}
+.panel-tab{flex:1;padding:12px 4px;font-size:11px;font-weight:500;color:var(--text-3);text-align:center;cursor:pointer;border:none;border-bottom:2px solid transparent;font-family:'DM Sans',sans-serif;background:none;transition:all 0.15s;}
+.panel-tab:hover{color:var(--text-2);background:var(--bg3);}
+.panel-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:var(--surface);}
+.panel-body{flex:1 1 auto;min-height:0;overflow-y:auto;overflow-x:hidden;padding:20px 20px 28px;}
+.panel-body::-webkit-scrollbar{width:4px;}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+.method-x-scroll{overflow-x:auto;overflow-y:visible;padding-bottom:10px;-webkit-overflow-scrolling:touch;}
+.method-x-scroll::-webkit-scrollbar{height:10px;}
+.method-x-scroll::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.18);border-radius:10px;}
+.data-currency-table{min-width:720px;}
+.tab-pane{display:none;}.tab-pane.active{display:block;}
+.tab-intro{background:var(--gold-light);border:1px solid var(--gold-mid);border-left:3px solid var(--gold);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;transition:all 0.2s;position:relative;}
+.tab-intro.dismissed{display:none;}
+.tab-intro-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:5px;display:flex;align-items:center;gap:7px;}
+.tab-intro-dismiss{position:absolute;top:8px;right:10px;font-size:15px;color:var(--gold);opacity:0.7;line-height:1;cursor:pointer;padding:2px 5px;border-radius:4px;transition:all 0.15s;}
+.tab-intro-dismiss:hover{opacity:1;background:var(--gold-mid);color:white;}
+.tab-intro-body{font-size:11px;line-height:1.7;color:var(--text-2);}
+.tab-intro-steps{margin-top:7px;display:flex;flex-direction:column;gap:3px;counter-reset:step;}
+.tab-intro-step{font-size:11px;color:var(--text-2);padding-left:16px;position:relative;line-height:1.5;}
+.tab-intro-step::before{content:counter(step);counter-increment:step;position:absolute;left:0;font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);font-weight:700;}
+.tab-intro-hint{font-size:10px;color:var(--gold);margin-top:8px;font-style:italic;text-align:right;}
+.onboarding{display:flex;flex-direction:column;align-items:flex-start;gap:14px;}
+.onboard-icon{width:44px;height:44px;background:var(--gold-light);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.onboard-title{font-family:'DM Serif Display',serif;font-size:18px;line-height:1.2;}
+.onboard-body{font-size:13px;line-height:1.7;color:var(--text-2);}
+.onboard-axes{display:flex;flex-direction:column;gap:8px;width:100%;}
+.onboard-axis{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);}
+.onboard-axis-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:3px;}
+.onboard-axis-name{font-size:12px;font-weight:600;margin-bottom:2px;}
+.onboard-axis-desc{font-size:11px;color:var(--text-3);line-height:1.5;}
+.profile-country-name{font-family:'DM Serif Display',serif;font-size:26px;line-height:1.1;margin-bottom:3px;}
+.profile-region{font-size:11px;color:var(--gold);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:14px;}
+.quadrant-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11px;font-weight:600;margin-bottom:16px;}
+.score-block{margin-bottom:12px;}
+.score-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+.score-label{font-size:11px;font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:6px;}
+.score-value{font-family:'DM Mono',monospace;font-size:14px;font-weight:600;}
+.score-track{width:100%;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.score-fill{height:100%;border-radius:2px;transition:width 0.6s cubic-bezier(0.23,1,0.32,1);}
+.profile-divider{border:none;border-top:1px solid var(--border-light);margin:14px 0;}
+.section-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;}
+.narrative{font-family:'DM Serif Display',serif;font-size:13px;line-height:1.75;color:var(--text-2);font-style:italic;}
+.ind-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.ind-item{background:var(--bg2);border:1px solid var(--border-light);padding:8px 10px;border-radius:var(--radius-sm);}
+.ind-key{font-size:10px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px;}
+.ind-val{font-size:12px;font-weight:600;}
+.iv-good{color:var(--forest);}.iv-bad{color:var(--terra);}.iv-mid{color:var(--gold);}
+.regime-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;margin-top:4px;}
+.rank-box{background:var(--bg2);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:12px;}
+.rank-box-title{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;}
+.rank-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;margin:3px 0;}
+.rank-key{color:var(--text-3);}
+.rank-val{font-family:'DM Mono',monospace;font-weight:600;color:var(--text);}
+.rank-shift-desc{font-size:10px;color:var(--text-3);font-style:italic;margin-top:5px;}
+.src-section{margin-top:4px;}
+.src-group{margin-bottom:10px;}
+.src-group-label{font-size:10px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+.src-item{padding:4px 0;border-bottom:1px solid var(--border-light);}
+.src-item:last-child{border-bottom:none;}
+.src-link{font-size:11px;color:var(--indigo);text-decoration:none;font-weight:500;}
+.src-link:hover{text-decoration:underline;}
+.src-note{font-size:10px;color:var(--text-3);margin-top:1px;line-height:1.4;}
+.cmp-header{display:flex;gap:8px;margin-bottom:16px;}
+.cmp-sel-wrap{flex:1;}
+.cmp-sel-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px;}
+.cmp-select{width:100%;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'DM Sans',sans-serif;font-size:12px;padding:7px 9px;border-radius:var(--radius-sm);outline:none;}
+.cmp-select:focus{border-color:var(--gold);}
+.cmp-axis-block{margin-bottom:14px;}
+.cmp-axis-label{font-size:11px;font-weight:600;color:var(--text-3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:7px;display:flex;align-items:center;gap:6px;}
+.cmp-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.cmp-bar-name{font-size:12px;width:88px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-2);font-weight:500;}
+.cmp-bar-track{flex:1;height:6px;background:var(--bg3);border-radius:3px;overflow:hidden;}
+.cmp-bar-fill{height:100%;border-radius:3px;transition:width 0.5s cubic-bezier(0.23,1,0.32,1);}
+.cmp-bar-num{font-family:'DM Mono',monospace;font-size:11px;width:28px;text-align:right;flex-shrink:0;color:var(--text-2);}
+.cmp-gap-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:11px;color:var(--text-4);}
+.cmp-gap-track{flex:1;height:2px;background:var(--bg3);border-radius:1px;}
+.cmp-gap-fill{height:100%;border-radius:1px;opacity:0.5;}
+.cmp-rank-box{background:var(--bg2);border:1px solid var(--border-light);border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:12px;font-size:11px;}
+.cmp-rank-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-3);margin-bottom:6px;}
+.cmp-rank-row{display:flex;gap:12px;}
+.cmp-rank-col{flex:1;}
+.cmp-rank-name{font-weight:600;color:var(--text);margin-bottom:4px;}
+.cmp-rank-line{display:flex;justify-content:space-between;color:var(--text-3);margin:2px 0;}
+.cmp-rank-line span:last-child{font-family:'DM Mono',monospace;font-weight:600;color:var(--text);}
+.cmp-insight{background:var(--sov-bg);border:1px solid #c5d8ef;border-left:3px solid var(--sov);padding:14px 16px;border-radius:var(--radius-sm);margin-top:14px;}
+.cmp-insight-title{font-size:11px;font-weight:700;color:var(--sov);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:7px;}
+.cmp-insight-body{font-family:'DM Serif Display',serif;font-size:13px;line-height:1.75;color:var(--text-2);font-style:italic;}
+.bias-preset-strip{display:flex;flex-direction:column;gap:3px;margin-bottom:14px;}
+.bias-preset-btn{width:100%;text-align:left;padding:7px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);font-family:'DM Sans',sans-serif;font-size:12px;color:var(--text-2);cursor:pointer;transition:all 0.15s;}
+.bias-preset-btn:hover{background:var(--bg2);border-color:var(--gold-mid);}
+.bias-preset-btn.active{background:var(--gold-light);border-color:var(--gold-mid);color:var(--gold);font-weight:600;}
+.bias-section{margin-bottom:18px;}
+.bias-section-title{font-size:11px;font-weight:700;color:var(--text-3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border-light);}
+.bias-row{display:flex;align-items:flex-start;gap:6px;padding:5px 0;border-bottom:1px solid var(--border-light);font-size:11px;}
+.bias-row:last-child{border-bottom:none;}
+.bias-rank-col{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-4);width:20px;flex-shrink:0;padding-top:1px;}
+.bias-name{font-weight:600;color:var(--text);flex-shrink:0;min-width:80px;}
+.bias-shift{font-family:'DM Mono',monospace;font-size:11px;font-weight:700;min-width:28px;text-align:right;flex-shrink:0;}
+.bias-shift.up{color:var(--forest);}.bias-shift.dn{color:var(--terra);}.bias-shift.flat{color:var(--text-4);}
+.bias-expl{font-size:10px;color:var(--text-3);line-height:1.4;flex:1;}
+.bias-interp{background:var(--sov-bg);border:1px solid #c5d8ef;border-left:3px solid var(--sov);padding:12px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.7;color:var(--text-2);}
+.bias-interp strong{display:block;font-size:11px;font-weight:700;color:var(--sov);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+.bias-same-note{font-size:11px;color:var(--text-3);font-style:italic;padding:8px 0;}
+.method-block{margin-bottom:22px;}
+.method-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:7px;display:flex;align-items:center;gap:8px;}
+.method-body{font-size:12px;line-height:1.75;color:var(--text-2);}
+.method-items{margin-top:8px;display:flex;flex-direction:column;gap:2px;}
+.method-item{font-size:11px;color:var(--text-3);padding:4px 0 4px 12px;border-bottom:1px solid var(--border-light);position:relative;}
+.method-item::before{content:'--';position:absolute;left:0;opacity:0.4;}
+.hypothesis-box{background:var(--sov-bg);border:1px solid #c5d8ef;border-left:3px solid var(--sov);padding:12px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.7;color:var(--text-2);}
+.limitations-box{background:var(--terra-light);border:1px solid #e8b8b0;border-left:3px solid var(--terra);padding:12px 14px;border-radius:var(--radius-sm);font-size:12px;line-height:1.7;color:var(--text-2);margin-bottom:16px;}
+.limitations-box strong{display:block;font-size:11px;font-weight:700;color:var(--terra);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:5px;}
+.dl-btns{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
+.dl-btn{display:flex;align-items:center;gap:10px;padding:9px 14px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface);color:var(--text-2);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all 0.15s;text-align:left;width:100%;}
+.dl-btn:hover{background:var(--bg2);border-color:var(--gold-mid);color:var(--gold);}
+.dl-icon{font-size:16px;}
+.overlay{position:fixed;inset:0;background:rgba(26,23,20,0.55);display:flex;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(3px);}
+.overlay-card{background:var(--surface);border-radius:12px;padding:36px 40px;max-width:480px;width:90%;box-shadow:0 8px 48px rgba(0,0,0,0.2);}
+.overlay-kente{height:4px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--gold) 0,var(--gold) 18px,var(--terra) 18px,var(--terra) 36px,var(--forest) 36px,var(--forest) 54px,var(--indigo) 54px,var(--indigo) 72px);margin-bottom:24px;}
+.overlay-title{font-family:'DM Serif Display',serif;font-size:24px;line-height:1.15;margin-bottom:12px;}
+.overlay-title em{font-style:normal;color:var(--gold);}
+.overlay-subtitle{font-size:13px;color:var(--text-2);line-height:1.7;margin-bottom:22px;}
+.overlay-axes{display:flex;flex-direction:column;gap:8px;margin-bottom:24px;}
+.overlay-axis{display:flex;align-items:flex-start;gap:12px;padding:10px 14px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg2);}
+.oa-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:4px;}
+.oa-name{font-size:13px;font-weight:600;margin-bottom:2px;}
+.oa-desc{font-size:12px;color:var(--text-3);line-height:1.5;}
+.overlay-hypothesis{font-family:'DM Serif Display',serif;font-style:italic;font-size:13px;line-height:1.7;color:var(--text-2);border-left:3px solid var(--gold);padding-left:14px;margin-bottom:24px;}
+.overlay-btn{width:100%;background:var(--gold);color:white;border:none;padding:13px 20px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.15s;box-shadow:0 2px 10px rgba(200,136,26,0.35);}
+.overlay-btn:hover{background:#b07518;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.3s ease forwards;}
+
+/* === ACCORDION INDICATORS === */
+.ind-item.clickable{cursor:pointer;transition:all 0.15s;user-select:none;}
+.ind-item.clickable:hover{border-color:var(--gold-mid);background:var(--gold-light);}
+.ind-item.expanded{border-color:var(--indigo);background:var(--indigo-light);}
+.ind-accordion{display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--border-light);}
+.ind-accordion.open{display:block;}
+.ind-acc-body{font-size:11px;line-height:1.7;color:var(--text-2);margin-bottom:6px;}
+.ind-acc-compare{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.ind-acc-compare-label{font-size:10px;color:var(--text-3);min-width:68px;}
+.ind-acc-bar-wrap{flex:1;height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.ind-acc-bar{height:100%;border-radius:2px;background:var(--indigo);}
+.ind-acc-bar.bad{background:var(--terra);}
+.ind-acc-bar.mid{background:var(--gold);}
+.ind-acc-bar.good{background:var(--forest);}
+.ind-acc-stat{font-family:'DM Mono',monospace;font-size:10px;color:var(--text-3);min-width:40px;text-align:right;}
+.ind-acc-src{font-size:10px;color:var(--indigo);text-decoration:none;display:inline-flex;align-items:center;gap:4px;}
+.ind-acc-src:hover{text-decoration:underline;}
+.ind-expand-hint{font-size:9px;color:var(--text-4);margin-top:2px;font-style:italic;}
+
+/* === CORRELATION HEADER REDESIGN === */
+.corr-stat-v2{display:flex;flex-direction:column;align-items:center;gap:3px;flex-shrink:0;min-width:140px;}
+.corr-axes-label{font-size:10px;color:var(--text-3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;text-align:center;}
+.corr-number-row{display:flex;align-items:center;gap:8px;}
+.corr-value-lg{font-family:'DM Mono',monospace;font-size:22px;font-weight:600;}
+.corr-badge{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:500;}
+.corr-badge.strong-neg{background:var(--terra-light);color:var(--terra);}
+.corr-badge.weak-neg{background:var(--gold-light);color:var(--gold);}
+.corr-badge.neutral{background:var(--bg3);color:var(--text-3);}
+.corr-badge.weak-pos,.corr-badge.strong-pos{background:var(--forest-light);color:var(--forest);}
+.corr-plain-explain{font-size:10px;color:var(--text-3);font-style:italic;text-align:center;max-width:160px;line-height:1.4;}
+
+/* === DATA VINTAGE BADGES === */
+.vintage-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:500;margin-left:4px;vertical-align:middle;}
+.vintage-current{background:#e8f5ec;color:var(--forest);}
+.vintage-aging{background:var(--gold-light);color:var(--gold);}
+.vintage-stale{background:var(--terra-light);color:var(--terra);}
+.data-currency-table{width:100%;border-collapse:collapse;font-size:11px;margin-top:8px;}
+.data-currency-table th{text-align:left;padding:5px 8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-3);border-bottom:1px solid var(--border);}
+.data-currency-table td{padding:5px 8px;border-bottom:1px solid var(--border-light);color:var(--text-2);}
+.data-currency-table tr:last-child td{border-bottom:none;}
+
+/* === COMPOSITE AXIS NOTIFICATION === */
+.composite-note{font-size:11px;color:var(--gold);background:var(--gold-light);border:1px solid var(--gold-mid);border-radius:var(--radius-sm);padding:4px 10px;display:none;margin-bottom:6px;}
+.composite-note.visible{display:block;}
+
+/* === LAYERED AUDIENCE DESIGN === */
+.insight-layer{margin-top:10px;}
+.insight-layer-toggle{display:flex;align-items:center;gap:6px;font-size:10px;color:var(--text-3);cursor:pointer;padding:4px 0;border:none;background:none;font-family:'DM Sans',sans-serif;}
+.insight-layer-toggle:hover{color:var(--indigo);}
+.insight-layer-toggle .toggle-icon{font-size:10px;transition:transform 0.2s;}
+.insight-layer-toggle.open .toggle-icon{transform:rotate(90deg);}
+.insight-deep{display:none;background:var(--bg2);border-left:2px solid var(--border);padding:8px 10px;border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:11px;line-height:1.7;color:var(--text-2);margin-top:4px;}
+.insight-deep.open{display:block;}
+.insight-deep strong{color:var(--text);}
+
+/* === FOOTNOTE MARKERS === */
+.fn{font-size:8px;vertical-align:super;color:var(--indigo);cursor:pointer;font-family:'DM Mono',monospace;}
+.fn:hover{text-decoration:underline;}
+
+</style>
+</head>
+<body>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-card">
+    <div class="overlay-kente"></div>
+    <div class="overlay-title">Democracy <em>&amp;</em> Sovereignty<br>Index &#8212; Africa 2024</div>
+    <div class="overlay-subtitle">This platform tests one assumption: that scoring well on Western democracy indices reflects genuine democratic quality. It adds two dimensions no standard index measures.</div>
+    <div class="overlay-axes">
+      <div class="overlay-axis"><div class="oa-dot" style="background:var(--proc)"></div><div><div class="oa-name" style="color:var(--proc)">Procedural Democracy</div><div class="oa-desc">Elections, civil liberties, press freedom. The EIU/V-Dem framework &#8212; useful, but only one part of the picture.</div></div></div>
+      <div class="overlay-axis"><div class="oa-dot" style="background:var(--legit)"></div><div><div class="oa-name" style="color:var(--legit)">Citizen Legitimacy</div><div class="oa-desc">What citizens actually experience &#8212; trust, accountability, economic delivery. From Afrobarometer surveys.</div></div></div>
+      <div class="overlay-axis"><div class="oa-dot" style="background:var(--sov)"></div><div><div class="oa-name" style="color:var(--sov)">Sovereignty Score</div><div class="oa-desc">Economic and political autonomy &#8212; CFA franc, IMF programmes, foreign military, resource control. A constructed proxy &#8212; not a direct measurement.</div></div></div>
+    </div>
+    <div class="overlay-hypothesis">&#8220;This platform tests whether high procedural scores may correlate with Western institutional dependency rather than democratic quality itself &#8212; it does not prove this claim.&#8221;</div>
+    <button class="overlay-btn" onclick="closeOverlay()">Start exploring &#8594;</button>
+  </div>
+</div>
+
+<div class="kente"></div>
+<div class="header">
+  <div class="header-brand">
+    <div class="brand-icon">&#9672;</div>
+    <div>
+      <div class="brand-name">Democracy &amp; Sovereignty Index</div>
+      <div class="brand-sub">Africa 2024 &middot; 30 countries &middot; 3 axes</div>
+    </div>
+  </div>
+  <div class="corr-banner">
+    <div class="corr-hypothesis"><em>Central question:</em> This platform tests whether procedural scores may correlate with Western dependency rather than democratic quality. A strongly negative correlation below <em>may suggest</em> existing indices measure alignment &#8212; not democracy.</div>
+    <div class="corr-stat-v2">
+      <div class="corr-axes-label" id="corrLabel">Procedural &#8596; Sovereignty</div>
+      <div class="corr-number-row">
+        <span class="corr-value-lg" id="corrVal">&#8212;</span>
+        <span class="corr-badge neutral" id="corrInterp">loading</span>
+      </div>
+      <div class="corr-plain-explain" id="corrExplain">Correlation between selected axes across 30 countries</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <div class="axis-badge" style="background:var(--proc-bg);color:var(--proc)"><div class="dot" style="background:var(--proc)"></div>Procedural</div>
+    <div class="axis-badge" style="background:var(--legit-bg);color:var(--legit)"><div class="dot" style="background:var(--legit)"></div>Legitimacy</div>
+    <div class="axis-badge" style="background:var(--sov-bg);color:var(--sov)"><div class="dot" style="background:var(--sov)"></div>Sovereignty</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="scatter-pane">
+    <div class="controls">
+      <div class="ctrl-group">
+        <span class="ctrl-label">X axis</span>
+        <select class="ctrl-select" id="xAxis" onchange="updateAxes()">
+          <option value="procedural">Procedural Democracy</option>
+          <option value="legitimacy">Citizen Legitimacy</option>
+          <option value="sovereignty">Sovereignty Score</option>
+          <option value="composite">Weighted Composite</option>
+        </select>
+      </div>
+      <div class="ctrl-group">
+        <span class="ctrl-label">Y axis</span>
+        <select class="ctrl-select" id="yAxis" onchange="updateAxes()">
+          <option value="sovereignty">Sovereignty Score</option>
+          <option value="procedural">Procedural Democracy</option>
+          <option value="legitimacy">Citizen Legitimacy</option>
+          <option value="composite">Weighted Composite</option>
+        </select>
+      </div>
+      <div class="weight-section">
+        <span class="weight-label-main">Weights</span>
+        <div class="weight-row">
+          <span class="weight-axis-label" style="color:var(--proc)">Proc</span>
+          <input type="range" id="wProc" min="0" max="100" value="33" oninput="adjustWeights('p',+this.value)">
+          <span class="weight-readout" id="wProcVal">33%</span>
+        </div>
+        <div class="weight-row">
+          <span class="weight-axis-label" style="color:var(--legit)">Legit</span>
+          <input type="range" id="wLegit" min="0" max="100" value="34" oninput="adjustWeights('l',+this.value)">
+          <span class="weight-readout" id="wLegitVal">34%</span>
+        </div>
+        <div class="weight-row">
+          <span class="weight-axis-label" style="color:var(--sov)">Sov</span>
+          <input type="range" id="wSov" min="0" max="100" value="33" oninput="adjustWeights('s',+this.value)">
+          <span class="weight-readout" id="wSovVal">33%</span>
+        </div>
+        <span class="quadrant-shift" id="quadShift"></span>
+      </div>
+    </div>
+    <div class="controls-sub">
+      <div class="ctrl-group">
+        <span class="ctrl-label">Quadrant mode</span>
+        <select class="ctrl-select" id="quadMode" onchange="updateQuadMode()">
+          <option value="selected">Selected axes</option>
+          <option value="composite-sov">Composite vs Sovereignty</option>
+          <option value="composite-legit">Composite vs Legitimacy</option>
+        </select>
+      </div>
+      <button class="reset-btn" onclick="resetAll()">&#8635; Reset all</button>
+    </div>
+    <div class="suggested-row">
+      <span class="suggested-label">Try comparing:</span>
+      <span class="suggest-chip" onclick="setSuggest('Rwanda','Cameroon')">Rwanda vs Cameroon</span>
+      <span class="suggest-chip" onclick="setSuggest('Botswana','Ghana')">Botswana vs Ghana</span>
+      <span class="suggest-chip" onclick="setSuggest('Eritrea','Mali')">Eritrea vs Mali</span>
+      <span class="suggest-chip" onclick="setSuggest('Burkina Faso','C\u00f4te d\'Ivoire')">Burkina vs C&#244;te d'Ivoire</span>
+      <span class="suggest-chip" onclick="setSuggest('Mauritius','Cameroon')">Mauritius vs Cameroon</span>
+    </div>
+    <div class="composite-note" id="compositeNote">
+  &#9432; Axes switched to <strong>Weighted Composite</strong> to show weight effects. Change axes manually to return to raw scores, or click Reset.
+</div>
+    <div class="legend">
+      <div class="leg-item"><div class="leg-dot" style="background:#c8881a"></div>Full / flawed democracy</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#e8a838"></div>Hybrid regime</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#b5402a"></div>Authoritarian</div>
+      <div class="leg-item"><div class="leg-dot" style="background:#333"></div>Anchor case</div>
+    </div>
+    <div class="canvas-wrap">
+      <canvas id="scatter"></canvas>
+      <div class="quad-label ql-tl" id="qlTL"></div>
+      <div class="quad-label ql-tr" id="qlTR"></div>
+      <div class="quad-label ql-bl" id="qlBL"></div>
+      <div class="quad-label ql-br" id="qlBR"></div>
+      <div class="tooltip" id="tooltip"></div>
+    </div>
+  </div>
+
+  <div class="right-panel">
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchTab('profile',this)">Profile</button>
+      <button class="panel-tab" onclick="switchTab('compare',this)">Compare</button>
+      <button class="panel-tab" onclick="switchTab('bias',this)">Bias Tests</button>
+      <button class="panel-tab" onclick="switchTab('method',this)">Method</button>
+    </div>
+    <div class="panel-body">
+      <div class="tab-pane active" id="tab-profile">
+        <div class="onboarding" id="onboard">
+          <div class="onboard-icon">&#127757;</div>
+          <div class="onboard-title">Click any country<br>on the scatter plot</div>
+          <div class="onboard-body">Each dot is a country. Hover to see scores and rank shift. Click to open a full analytical profile with dependency indicators, narrative, and sources.</div>
+          <div class="onboard-axes">
+            <div class="onboard-axis" style="background:var(--proc-bg);border-color:#e8d0a0">
+              <div class="onboard-axis-dot" style="background:var(--proc)"></div>
+              <div><div class="onboard-axis-name" style="color:var(--proc)">Procedural Democracy</div><div class="onboard-axis-desc">Electoral and civil liberties indicators. High = looks like a liberal democracy.</div></div>
+            </div>
+            <div class="onboard-axis" style="background:var(--legit-bg);border-color:#eabfb8">
+              <div class="onboard-axis-dot" style="background:var(--legit)"></div>
+              <div><div class="onboard-axis-name" style="color:var(--legit)">Citizen Legitimacy</div><div class="onboard-axis-desc">What citizens actually experience. Can diverge sharply from procedural scores.</div></div>
+            </div>
+            <div class="onboard-axis" style="background:var(--sov-bg);border-color:#b8cfe8">
+              <div class="onboard-axis-dot" style="background:var(--sov)"></div>
+              <div><div class="onboard-axis-name" style="color:var(--sov)">Sovereignty Score</div><div class="onboard-axis-desc">A constructed proxy index. The axis no standard democracy index measures.</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="profileContent" style="display:none"></div>
+      </div>
+      <div class="tab-pane" id="tab-compare">
+        <div class="tab-intro" id="intro-compare">
+          <div class="tab-intro-dismiss" onclick="dismissIntro('compare')">&#10005;</div>
+          <div class="tab-intro-title">&#9906; How to use Compare</div>
+          <div class="tab-intro-body">Pick any two countries to see how they stack up across all three axes. Two countries can look identical on a standard democracy index but be operating under completely different external constraints — this tab makes that visible.</div>
+          <div class="tab-intro-steps">
+            <div class="tab-intro-step">Select a country in each dropdown, or click a <strong>suggested comparison</strong> chip on the scatter plot.</div>
+            <div class="tab-intro-step">The <strong>bar chart</strong> shows each axis side by side — the gap number is the difference between the two countries on that dimension.</div>
+            <div class="tab-intro-step">The <strong>blue insight panel</strong> explains what the divergence means analytically, written for the specific pair you chose.</div>
+            <div class="tab-intro-step"><strong>Rank shifts</strong> show how many places each country moves when legitimacy and sovereignty are counted, versus procedural scores alone.</div>
+          </div>
+          <div class="tab-intro-hint">Dismiss with &#10005;</div>
+        </div>
+        <div class="cmp-header">
+          <div class="cmp-sel-wrap"><div class="cmp-sel-label">Country A</div><select class="cmp-select" id="cmpA" onchange="renderCompare()"><option value="">Select</option></select></div>
+          <div class="cmp-sel-wrap"><div class="cmp-sel-label">Country B</div><select class="cmp-select" id="cmpB" onchange="renderCompare()"><option value="">Select</option></select></div>
+        </div>
+        <div id="compareContent"></div>
+      </div>
+      <div class="tab-pane" id="tab-bias">
+        <div class="tab-intro" id="intro-bias">
+          <div class="tab-intro-dismiss" onclick="dismissIntro('bias')">&#10005;</div>
+          <div class="tab-intro-title">&#9878; How to use Bias Tests</div>
+          <div class="tab-intro-body">Standard democracy indices only measure <strong>procedural</strong> factors — elections, civil liberties, press freedom. This tab asks: what happens to country rankings if we also count whether citizens feel their government is legitimate, or whether a country controls its own economy?</div>
+          <div class="tab-intro-steps">
+            <div class="tab-intro-step"><strong>Click a preset</strong> — each applies different weights. "Procedural-only" replicates what standard indices measure. The others add legitimacy and sovereignty to the ranking formula.</div>
+            <div class="tab-intro-step"><strong>"Most overrated"</strong> = countries that rank high on standard indices but fall when citizen experience or sovereignty is counted. May indicate dependency being mistaken for democracy.</div>
+            <div class="tab-intro-step"><strong>"Most underrated"</strong> = countries penalised by procedural-only scoring whose citizens report higher satisfaction or who exercise genuine autonomy.</div>
+            <div class="tab-intro-step">The <strong>shift number</strong> shows how many ranking places a country moves vs. procedural-only. Green = rises, red = falls. A large shift means the standard index may be misleading.</div>
+          </div>
+        </div>
+        <div class="bias-preset-strip" id="biasPresetStrip"></div>
+        <div id="biasContent"></div>
+      </div>
+      <div class="tab-pane" id="tab-method">
+        <div class="method-block">
+          <div class="method-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--proc);display:inline-block"></span>Procedural Democracy</div>
+          <div class="method-body">Measures the institutional architecture of democracy: electoral competition, civil liberties, press freedom, government functioning. Draws from EIU Democracy Index, V-Dem, and Freedom House. This is the liberal-democratic tradition operationalized.</div>
+          <div class="method-items">
+            <div class="method-item">Electoral process &amp; pluralism (V-Dem)</div>
+            <div class="method-item">Civil liberties index (Freedom House)</div>
+            <div class="method-item">Press freedom score (RSF)</div>
+            <div class="method-item">Government functioning (EIU)</div>
+            <div class="method-item">Political participation rate</div>
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--legit);display:inline-block"></span>Citizen Legitimacy</div>
+          <div class="method-body">Captures what citizens perceive as legitimate governance &#8212; accountability, responsiveness, economic delivery. Primarily Afrobarometer survey data. Measures the gap between institutional form and lived democratic experience.</div>
+          <div class="method-items">
+            <div class="method-item">Satisfaction with democracy (Afrobarometer)</div>
+            <div class="method-item">Trust in government institutions</div>
+            <div class="method-item">Perceived corruption levels</div>
+            <div class="method-item">Economic delivery perception</div>
+            <div class="method-item">Security &amp; personal safety</div>
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--sov);display:inline-block"></span>Sovereignty Score &#8212; Constructed Proxy Index</div>
+          <div class="method-body">The original contribution of this platform. A <strong>constructed index using five proxies</strong> &#8212; not a direct measurement. Designed for comparative interpretation, not as a definitive truth claim.</div>
+          <div class="method-items">
+            <div class="method-item">Currency independence (CFA franc membership reduces score)</div>
+            <div class="method-item">IMF programme conditionality history (active programme reduces score)</div>
+            <div class="method-item">Foreign military bases on territory (presence reduces score)</div>
+            <div class="method-item">Resource contract terms (foreign-controlled revenues reduce score)</div>
+            <div class="method-item">Aid dependency ratio (ODA as % GNI reduces score at high levels)</div>
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-title">Data Sources</div>
+          <div class="method-body">
+            <strong>Procedural:</strong> EIU Democracy Index 2023, V-Dem Country Data v13, Freedom House Freedom in the World 2023.<br><br>
+            <strong>Legitimacy:</strong> Afrobarometer Round 9 (2021&#8211;2023). Not all countries surveyed in the same year; some estimates draw from Round 8. Survey perception data has known sampling limitations.<br><br>
+            <strong>Sovereignty:</strong> IMF Country Information pages, SIPRI Military Expenditure Database, EITI Extractive Industries Transparency Initiative, World Bank ODA data (DT.ODA.ODAT.GN.ZS).
+          </div>
+        </div>
+        <div class="method-block">
+          <div class="method-title"><span style="width:10px;height:10px;border-radius:50%;background:var(--sov);display:inline-block"></span>Sovereignty Score &#8212; Scoring Formula</div>
+          <div class="method-body">The sovereignty score starts at <strong>10.0</strong> and deductions are applied for each dependency indicator present. The formula is transparent and reproducible &#8212; any researcher can verify a country&#39;s score using the public sources listed above.</div>
+          <div class="method-x-scroll" style="margin-top:10px"><table class="data-currency-table">
+            <thead><tr><th>Proxy indicator</th><th>Condition</th><th>Deduction</th><th>Rationale</th></tr></thead>
+            <tbody>
+              <tr><td><strong>CFA franc membership</strong></td><td>Member of XOF or XAF zone</td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8722;1.6</td><td>Monetary policy surrendered; 50% reserves held in Paris</td></tr>
+              <tr><td><strong>IMF programme</strong></td><td>Active structural adjustment / ECF</td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8722;1.0</td><td>Fiscal policy subject to conditionality</td></tr>
+              <tr><td><strong>IMF programme</strong></td><td>Occasional / historical only</td><td style="font-family:'DM Mono',monospace;color:var(--gold)">&#8722;0.4</td><td>Partial constraint on fiscal autonomy</td></tr>
+              <tr><td><strong>Foreign military base</strong></td><td>One or more confirmed bases</td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8722;1.2</td><td>Security sovereignty partially ceded; SOFA agreements limit jurisdiction</td></tr>
+              <tr><td><strong>Resource revenue control</strong></td><td>Primarily foreign-controlled</td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8722;1.5</td><td>Primary commodity revenues captured externally</td></tr>
+              <tr><td><strong>Resource revenue control</strong></td><td>Mixed (partial domestic capture)</td><td style="font-family:'DM Mono',monospace;color:var(--gold)">&#8722;0.6</td><td>Meaningful but incomplete resource sovereignty</td></tr>
+              <tr><td><strong>Aid dependency</strong></td><td>High (&gt;10% ODA/GNI)</td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8722;1.0</td><td>Budget priorities shaped by donor conditionality</td></tr>
+              <tr><td><strong>Aid dependency</strong></td><td>Medium (3&#8211;10% ODA/GNI)</td><td style="font-family:'DM Mono',monospace;color:var(--gold)">&#8722;0.4</td><td>Partial fiscal constraint from aid relationships</td></tr>
+              <tr><td colspan="2"><strong>Maximum possible score</strong></td><td style="font-family:'DM Mono',monospace;color:var(--forest)">10.0</td><td>No dependency on any of the five dimensions</td></tr>
+              <tr><td colspan="2"><strong>Minimum possible score (all deductions)</strong></td><td style="font-family:'DM Mono',monospace;color:var(--terra)">&#8776;3.3</td><td>CFA + active IMF + military base + foreign resource + high aid</td></tr>
+            </tbody>
+          </table></div>
+          <div class="method-body" style="margin-top:10px;font-size:11px;color:var(--text-3)"><em>Note: Scores are capped at 0&#8211;10. The formula produces indicative ranges, not precise measurements. Researchers are encouraged to apply alternative weightings using the Bias Tests tab.</em></div>
+        </div>
+        <div class="limitations-box">
+          <strong>Limitations &amp; Honest Disclaimers</strong>
+          Sovereignty is proxy-based and constructed &#8212; not directly measured. Legitimacy depends on survey perception data with known sampling and timing limitations. Cross-country comparability is imperfect due to different data vintages. Scores should be treated as indicative ranges, not precise measurements. Interpretive narratives are analytical summaries, not raw data claims. This platform tests a hypothesis; it does not prove it.
+        </div>
+        <div class="hypothesis-box">
+          <strong>Central Hypothesis (investigative framing):</strong> If sovereignty-asserting states consistently cluster at the bottom of procedural rankings while Western-dependent states cluster at the top &#8212; regardless of citizen experience &#8212; this <em>may suggest</em> existing indices measure compliance with a particular political economy rather than democratic quality. The live correlation in the header tests this claim. It does not settle it.
+        </div>
+        <div class="method-block" style="margin-top:20px">
+          <div class="method-title">Data Currency &amp; Vintage</div>
+          <div class="method-body">All indicators carry a vintage year badge (&#9679; current, &#9651; aging 2&ndash;3 yrs, &#9661; stale 4+ yrs). Scores are updated when primary sources publish new data. Below are current vintages for each data source.</div>
+          <div class="method-x-scroll"><table class="data-currency-table">
+            <thead><tr><th>Source</th><th>Indicator</th><th>Latest year</th><th>Update frequency</th><th>Free access</th></tr></thead>
+            <tbody>
+              <tr><td>EIU Democracy Index</td><td>Procedural</td><td>2023</td><td>Annual (Jan)</td><td><a href="https://www.eiu.com/n/campaigns/democracy-index-2023/" target="_blank" style="color:var(--indigo)">eiu.com &#8599;</a></td></tr>
+              <tr><td>V-Dem Country Data v13</td><td>Procedural</td><td>2023</td><td>Annual (Mar)</td><td><a href="https://www.v-dem.net/data/the-v-dem-dataset/" target="_blank" style="color:var(--indigo)">v-dem.net &#8599;</a></td></tr>
+              <tr><td>Freedom House FitW</td><td>Procedural</td><td>2024</td><td>Annual (Feb)</td><td><a href="https://freedomhouse.org/report/freedom-world" target="_blank" style="color:var(--indigo)">freedomhouse.org &#8599;</a></td></tr>
+              <tr><td>Afrobarometer Round 9</td><td>Legitimacy</td><td>2021&ndash;23</td><td>Every 3&ndash;5 yrs</td><td><a href="https://www.afrobarometer.org/data/" target="_blank" style="color:var(--indigo)">afrobarometer.org &#8599;</a></td></tr>
+              <tr><td>IMF Programs Database</td><td>Sovereignty</td><td>2024</td><td>Quarterly</td><td><a href="https://www.imf.org/en/Programs" target="_blank" style="color:var(--indigo)">imf.org &#8599;</a></td></tr>
+              <tr><td>SIPRI Military Bases</td><td>Sovereignty</td><td>2024</td><td>Annual</td><td><a href="https://www.sipri.org/databases" target="_blank" style="color:var(--indigo)">sipri.org &#8599;</a></td></tr>
+              <tr><td>EITI Country Reports</td><td>Sovereignty</td><td>2022&ndash;23</td><td>Annual</td><td><a href="https://eiti.org/countries" target="_blank" style="color:var(--indigo)">eiti.org &#8599;</a></td></tr>
+              <tr><td>World Bank ODA % GNI</td><td>Sovereignty</td><td>2022</td><td>Annual (lag ~18mo)</td><td><a href="https://data.worldbank.org/indicator/DT.ODA.ODAT.GN.ZS" target="_blank" style="color:var(--indigo)">data.worldbank.org &#8599;</a></td></tr>
+            </tbody>
+          </table></div>
+        </div>
+        <div class="method-block" style="margin-top:20px">
+          <div class="method-title">How to Cite</div>
+          <div class="method-body" style="background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 14px;font-family:'DM Mono',monospace;font-size:11px;line-height:1.8;user-select:all;">Travis, A. (2024). <em>Africa Democracy &amp; Sovereignty Index</em> [Interactive research platform]. Retrieved from https://ahtravisii.github.io/AfricaIndex/</div>
+          <div class="method-body" style="margin-top:8px;font-size:11px;color:var(--text-3)">To cite a specific country profile, append the country name as a hash: <span style="font-family:'DM Mono',monospace">#rwanda</span>, <span style="font-family:'DM Mono',monospace">#cameroon</span>, etc. The page will load directly to that profile.</div>
+        </div>
+        <div class="method-block" style="margin-top:20px">
+          <div class="method-title">Downloads</div>
+          <div class="dl-btns">
+            <button class="dl-btn" onclick="downloadDataset()"><span class="dl-icon">&#8659;</span><div><div style="font-weight:600">Download dataset (JSON)</div><div style="font-size:11px;color:var(--text-3)">All 30 countries &#8212; scores, indicators, narratives, sources</div></div></button>
+            <button class="dl-btn" onclick="downloadDataDictionary()"><span class="dl-icon">&#128218;</span><div><div style="font-weight:600">Download data dictionary (JSON)</div><div style="font-size:11px;color:var(--text-3)">Field definitions, value meanings, caveats</div></div></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// === INDICATOR DEEP-DIVE DATA ===
+// Per-indicator accordion content: body text, regional comparison, source
+var INDICATOR_DEEP = {
+  cfa: {
+    label: 'CFA Franc Zone',
+    intro: 'The CFA franc is a colonial-era monetary arrangement in which 14 African states share currencies (XOF and XAF) pegged to the Euro and backed by the French Treasury. Member states must deposit 50% of their foreign exchange reserves in Paris, limiting monetary policy autonomy. The arrangement was designed in France&#39;s post-colonial economic interests and has been subject to intense debate since the 1960s.',
+    compare: function(c) {
+      var members = countries.filter(function(x){return x.indicators.cfa===true;}).length;
+      var total = countries.length;
+      return {label:'CFA members in dataset', count:members, total:total, pct:Math.round(members/total*100)};
+    },
+    vintageYear: 2024,
+    sourceLabel: 'Banque de France / African CFA zone member list',
+    sourceUrl: 'https://www.banque-france.fr/en/banque-de-france/international-and-european-relations/franc-zone-and-development-financing',
+    goodDirection: false // false = membership is negative for sovereignty
+  },
+  imf: {
+    label: 'IMF Programme',
+    intro: 'IMF structural adjustment programmes (SAPs) and Extended Credit Facilities (ECFs) attach policy conditions — typically fiscal austerity, currency liberalisation, and privatisation — to loan disbursements. Active programmes constrain government spending choices and can override domestic economic policy decisions. The IMF publishes all current programme participants on its country pages, updated quarterly.',
+    compare: function(c) {
+      var active = countries.filter(function(x){return x.indicators.imf===true;}).length;
+      var total = countries.length;
+      return {label:'Countries with active IMF programmes', count:active, total:total, pct:Math.round(active/total*100)};
+    },
+    vintageYear: 2024,
+    sourceLabel: 'IMF Programs Database (updated quarterly)',
+    sourceUrl: 'https://www.imf.org/en/Programs',
+    goodDirection: false
+  },
+  milBase: {
+    label: 'Foreign Military Presence',
+    intro: 'Foreign military bases and access agreements grant external powers logistical and operational presence on sovereign territory. These arrangements often come with Status of Forces Agreements (SOFAs) that limit host-country jurisdiction over foreign personnel and operations. The United States, France, and China maintain the most active African base networks; data from SIPRI and the Africa Portal are the most reliable open-source trackers.',
+    compare: function(c) {
+      var present = countries.filter(function(x){return x.indicators.milBase===true;}).length;
+      var total = countries.length;
+      return {label:'Countries hosting foreign military', count:present, total:total, pct:Math.round(present/total*100)};
+    },
+    vintageYear: 2024,
+    sourceLabel: 'SIPRI Database on Military Bases (Africa)',
+    sourceUrl: 'https://www.sipri.org/databases',
+    goodDirection: false
+  },
+  resourceCtrl: {
+    label: 'Resource Revenue Control',
+    intro: 'Resource sovereignty measures whether primary commodity revenues (oil, gas, minerals, cocoa, coffee) flow primarily to domestic state or private actors versus foreign corporations. Low domestic control typically results from colonial-era concession terms, post-independence investment agreements, or debt-driven resource deals. The EITI (Extractive Industries Transparency Initiative) publishes country-level revenue flow reports; World Bank data supplements this for non-EITI members. "Mixed" means meaningful domestic revenue capture exists but significant foreign extraction also occurs.',
+    compare: function(c) {
+      var domestic = countries.filter(function(x){return x.indicators.resourceCtrl==='yes';}).length;
+      var mixed    = countries.filter(function(x){return x.indicators.resourceCtrl==='partial';}).length;
+      var foreign  = countries.filter(function(x){return x.indicators.resourceCtrl==='no';}).length;
+      return {label:'Domestic control across dataset', count:domestic, total:countries.length, pct:Math.round(domestic/countries.length*100), extra:'Mixed: '+mixed+' | Foreign: '+foreign};
+    },
+    vintageYear: 2023,
+    sourceLabel: 'EITI Country Reports 2022-2023',
+    sourceUrl: 'https://eiti.org/countries',
+    goodDirection: true // 'yes' = good for sovereignty
+  },
+  aidDep: {
+    label: 'Aid Dependency',
+    intro: 'Aid dependency is measured as Official Development Assistance (ODA) as a percentage of Gross National Income. The World Bank publishes this annually (indicator DT.ODA.ODAT.GN.ZS). High aid dependency constrains policy autonomy because donor conditionality — often informal — shapes budget priorities. The threshold categories used here follow World Bank classification: low (<3% GNI), medium (3-10%), high (>10%). Countries that have actively rejected aid (Eritrea, Zimbabwe in specific contexts) are marked "None/rejected."',
+    compare: function(c) {
+      var high   = countries.filter(function(x){return x.indicators.aidDep==='high';}).length;
+      var medium = countries.filter(function(x){return x.indicators.aidDep==='medium';}).length;
+      var low    = countries.filter(function(x){return x.indicators.aidDep==='low';}).length;
+      var none   = countries.filter(function(x){return x.indicators.aidDep==='none';}).length;
+      return {label:'High dependency (>10% GNI)', count:high, total:countries.length, pct:Math.round(high/countries.length*100), extra:'Medium: '+medium+' | Low: '+low+' | None/rejected: '+none};
+    },
+    vintageYear: 2022,
+    sourceLabel: 'World Bank ODA % GNI (DT.ODA.ODAT.GN.ZS) — 2022 data',
+    sourceUrl: 'https://data.worldbank.org/indicator/DT.ODA.ODAT.GN.ZS',
+    goodDirection: false
+  }
+};
+
+// Vintage year helper
+var CURRENT_YEAR = 2024;
+function vintageClass(year) {
+  var age = CURRENT_YEAR - year;
+  if (age <= 1)  return 'vintage-current';
+  if (age <= 3)  return 'vintage-aging';
+  return 'vintage-stale';
+}
+function vintageLabel(year) {
+  var age = CURRENT_YEAR - year;
+  if (age <= 1)  return year + ' &#9679;';
+  if (age <= 3)  return year + ' &#9651;';
+  return year + ' &#9661;';
+}
+
+// Toggle accordion
+function toggleIndicator(indKey, countryName) {
+  var id = 'acc-' + indKey + '-' + countryName.replace(/[^a-zA-Z]/g,'');
+  var el = document.getElementById(id);
+  if (!el) return;
+  var isOpen = el.classList.contains('open');
+  // Close all others first
+  document.querySelectorAll('.ind-accordion').forEach(function(a){a.classList.remove('open');});
+  document.querySelectorAll('.ind-item').forEach(function(i){i.classList.remove('expanded');});
+  if (!isOpen) {
+    el.classList.add('open');
+    el.closest('.ind-item').classList.add('expanded');
+  }
+}
+
+// === DATA ===
+var countries = [
+  {name:"Mauritius",region:"Southern & Indian Ocean",procedural:8.1,legitimacy:7.2,sovereignty:2.8,anchor:true,regime:"full",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"The model dependent democracy. Scores highest in Africa on procedural indicators, deeply integrated into Western economic systems. Raises the core question: does institutional performance reflect genuine democratic quality, or structural alignment with the measuring framework itself?"},
+  {name:"Eritrea",region:"Horn of Africa",procedural:1.4,legitimacy:2.1,sovereignty:8.8,anchor:true,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"yes",aidDep:"none"},
+   narrative:"The limiting case. Maximum sovereignty - no IMF, no foreign aid, no foreign military, no NGOs. Yet scores at the absolute bottom on both procedural democracy and citizen legitimacy. Sovereignty in service of regime survival, not popular emancipation. The mass exodus of Eritreans is the population voting with their feet."},
+  {name:"Rwanda",region:"East Africa",procedural:3.1,legitimacy:6.8,sovereignty:6.9,anchor:true,regime:"auth",
+   indicators:{cfa:false,imf:"partial",milBase:false,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"The developmental state paradox. Low procedural score - no real opposition, heavy press restrictions. Yet citizen legitimacy is relatively high, driven by extraordinary development outcomes, near-zero perceived corruption, and the world's highest female parliamentary representation. Is democracy about process or outcomes?"},
+  {name:"Cameroon",region:"Central Africa",procedural:2.8,legitimacy:2.5,sovereignty:2.2,anchor:true,regime:"auth",
+   indicators:{cfa:true,imf:true,milBase:true,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"The most damning case. Low procedural democracy, low citizen legitimacy, AND low sovereignty. Biya in power since 1982. French military presence, CFA franc, French diplomatic protection at the UN. Western dependency has insulated a predatory kleptocracy from meaningful pressure."},
+  {name:"Mali",region:"West Africa",procedural:1.8,legitimacy:4.2,sovereignty:7.1,anchor:true,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"The contested sovereignty case. Expelled French forces, exited CFA, withdrew from ECOWAS. Procedural scores collapsed immediately. But citizen legitimacy - especially among youth - remains higher than expected. Sovereignty assertion and democratic backsliding happened simultaneously; the indices only capture one."},
+  {name:"Cabo Verde",region:"West Africa",procedural:7.9,legitimacy:6.5,sovereignty:3.1,anchor:false,regime:"full",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Small island state with no precolonial institutional complexity. Deep Western economic integration. Scores well precisely because its governance structure maps almost perfectly onto the liberal democratic template."},
+  {name:"Botswana",region:"Southern Africa",procedural:7.5,legitimacy:5.8,sovereignty:4.2,anchor:false,regime:"flawed",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Africa&#39;s procedural success story. But Tswana majority dominance and marginalized San communities reveal substantive gaps the score does not capture. Debswana diamond partnership gives more domestic resource leverage than most - the sovereignty score is higher than comparable flawed democracies."},
+  {name:"South Africa",region:"Southern Africa",procedural:7.0,legitimacy:4.5,sovereignty:5.5,anchor:false,regime:"flawed",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Strong procedural institutions coexist with deep citizen disillusionment. ANC governance failures and service delivery collapse create a wide gap between procedural score and legitimacy. BRICS membership and non-alignment push sovereignty upward."},
+  {name:"Ghana",region:"West Africa",procedural:6.7,legitimacy:5.9,sovereignty:3.8,anchor:false,regime:"flawed",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"Competitive multiparty democracy with regular transfers of power. IMF dependency after the 2022 debt crisis significantly constrains fiscal sovereignty. Gold and cocoa revenues largely foreign-controlled. Procedurally similar to Botswana - but operating under far greater external fiscal constraint."},
+  {name:"Namibia",region:"Southern Africa",procedural:6.5,legitimacy:5.2,sovereignty:4.0,anchor:false,regime:"flawed",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"SWAPO dominance creates competitive but structurally uneven elections. Diamond and uranium revenues largely captured by foreign corporations despite formal political independence."},
+  {name:"Senegal",region:"West Africa",procedural:6.0,legitimacy:5.5,sovereignty:5.8,anchor:false,regime:"flawed",
+   indicators:{cfa:true,imf:"partial",milBase:true,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Live test case. Faye's 2024 election win on a sovereignty platform begins renegotiating oil contracts and distancing from France. CFA membership and French military presence still constrain sovereignty. Watch this score over three years."},
+  {name:"Zambia",region:"Southern Africa",procedural:5.5,legitimacy:5.0,sovereignty:3.0,anchor:false,regime:"flawed",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"2021 democratic transition praised internationally. But copper revenues largely captured by foreign firms, and IMF debt restructuring significantly constrains fiscal autonomy. Procedural improvement coexisting with deepening dependency."},
+  {name:"Kenya",region:"East Africa",procedural:4.9,legitimacy:4.1,sovereignty:3.5,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:true,milBase:true,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"US military presence, IMF austerity driving 2024 protests. Competitive elections exist but are frequently contested. Dependency relationships clearly constrain policy space and fuel popular discontent."},
+  {name:"Liberia",region:"West Africa",procedural:4.8,legitimacy:4.5,sovereignty:2.8,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:true,milBase:true,resourceCtrl:"no",aidDep:"high"},
+   narrative:"Post-conflict reconstruction heavily donor-dependent. US historical relationship creates deep structural alignment. Resources controlled by foreign concessionaires. Higher procedural score is structurally produced by the dependency relationship."},
+  {name:"Morocco",region:"North Africa",procedural:4.5,legitimacy:4.8,sovereignty:4.5,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:false,milBase:true,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Monarchy with elected parliament. US military cooperation agreements. Phosphate resources provide some economic leverage. Moderate scores across all axes reflect genuine political complexity."},
+  {name:"C\u00f4te d'Ivoire",region:"West Africa",procedural:4.1,legitimacy:4.5,sovereignty:2.5,anchor:false,regime:"hybrid",
+   indicators:{cfa:true,imf:true,milBase:true,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"CFA franc, French military base, IMF programme, cocoa revenues captured by foreign processors - high dependency across every vector. Yet scores in hybrid rather than authoritarian range. A case where Western alignment cushions the rating."},
+  {name:"Nigeria",region:"West Africa",procedural:4.2,legitimacy:3.5,sovereignty:5.1,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"no",aidDep:"low"},
+   narrative:"Nigeria&#39;s governance fabric weaves together hundreds of traditional institutions — a 2016 government white paper cited over 4,000 recognized traditional rulers, though figures vary by definition — alongside weak formal democracy and powerful religious authorities. No standard index captures this institutional plurality. The single composite score for Nigeria may be the most analytically limited number in the entire dataset."},
+  {name:"Tunisia",region:"North Africa",procedural:4.2,legitimacy:3.8,sovereignty:5.2,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Democratic backsliding under Saied since 2021. IMF conditionality constrains fiscal policy. Illustrates how procedural democracy can be dismantled rapidly within a Western-integrated state."},
+  {name:"Tanzania",region:"East Africa",procedural:4.0,legitimacy:5.2,sovereignty:5.8,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Competitive authoritarianism with higher citizen legitimacy than procedural score suggests. Low external dependency. Confrontational approach to foreign mining contracts raised sovereignty score."},
+  {name:"Angola",region:"Central Africa",procedural:3.5,legitimacy:4.2,sovereignty:5.8,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:"partial",milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"MPLA dominance since independence. Sonangol state oil company retains significant resource control - higher sovereignty than comparable petrostates. Some democratic opening under Lourenco but structural party dominance persists."},
+  {name:"Uganda",region:"East Africa",procedural:3.5,legitimacy:3.8,sovereignty:4.8,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:true,milBase:true,resourceCtrl:"no",aidDep:"medium"},
+   narrative:"Museveni in power since 1986. US counterterrorism cooperation insulates from external pressure. Similar democratic records to AES states but aligned strategically with Western security interests - a clear case of selective conditionality."},
+  {name:"Mozambique",region:"Southern Africa",procedural:3.8,legitimacy:3.5,sovereignty:3.2,anchor:false,regime:"hybrid",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"no",aidDep:"high"},
+   narrative:"LNG resources controlled by Total and other foreign firms. High aid dependency. Post-election violence in 2024 exposes procedural fragility. Deep external dependency constrains policy space across every dimension."},
+  {name:"Algeria",region:"North Africa",procedural:3.3,legitimacy:4.0,sovereignty:7.0,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"yes",aidDep:"none"},
+   narrative:"Hydrocarbon wealth enables genuine fiscal sovereignty. No IMF dependency, no foreign military bases. Same quadrant as AES states but through a completely different historical mechanism - oil wealth rather than post-coup sovereignty assertion."},
+  {name:"Zimbabwe",region:"Southern Africa",procedural:3.0,legitimacy:2.8,sovereignty:5.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Western sanctions since 2000 paradoxically bolstered sovereignty score while devastating citizen welfare. Illustrates how sanctions can reinforce authoritarianism - the population bears the cost while the regime claims victimhood."},
+  {name:"Ethiopia",region:"East Africa",procedural:2.9,legitimacy:3.5,sovereignty:6.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:true,milBase:false,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Post-Tigray war political landscape remains volatile. GERD dam project represents significant sovereignty assertion. Ethnic federalism creates legitimacy dynamics that a national average score cannot meaningfully capture."},
+  {name:"DRC",region:"Central Africa",procedural:2.5,legitimacy:2.8,sovereignty:3.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:true,milBase:true,resourceCtrl:"no",aidDep:"high"},
+   narrative:"Coltan, cobalt, gold overwhelmingly extracted by foreign firms and armed groups. UN peacekeeping presence. High aid dependency. Simultaneously undemocratic and externally penetrated - the worst position on the entire platform."},
+  {name:"Egypt",region:"North Africa",procedural:2.5,legitimacy:3.2,sovereignty:3.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:true,milBase:true,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"US military aid ($1.3bn annually) provides Western cover for deep authoritarianism. Massive IMF programme. Sisi's regime illustrates how strategic alignment insulates authoritarian states from the democratic conditionality applied to less useful partners."},
+  {name:"Burkina Faso",region:"West Africa",procedural:2.0,legitimacy:4.5,sovereignty:7.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Expelled French forces, exited CFA arrangement. Junta uses explicit Pan-Africanist language. Citizen legitimacy - especially youth - higher than procedural score suggests. The decolonization trap in real time: legitimate anti-colonial grievances potentially weaponized to consolidate authoritarian power."},
+  {name:"Niger",region:"West Africa",procedural:2.0,legitimacy:4.0,sovereignty:7.2,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:false,resourceCtrl:"partial",aidDep:"low"},
+   narrative:"Expelled French and US military. Uranium resources subject to renegotiation. ECOWAS sanctions imposed faster and more severely than on comparable non-AES authoritarian states that remain Western-aligned."},
+  {name:"Sudan",region:"North Africa / Horn",procedural:1.5,legitimacy:2.0,sovereignty:4.5,anchor:false,regime:"auth",
+   indicators:{cfa:false,imf:false,milBase:true,resourceCtrl:"partial",aidDep:"medium"},
+   narrative:"Civil war since 2023 has collapsed state capacity. RSF and SAF competing for control, with UAE and Russian involvement. Illustrates how conflict becomes a sovereignty-destroying mechanism independent of external dependency."}
+];
+
+// Attach sources
+countries.forEach(function(c) {
+  c.sources = {
+    procedural: [
+      {label:"EIU Democracy Index 2023",url:"https://www.eiu.com/n/campaigns/democracy-index-2023/",note:"Overall score and sub-components for "+c.name},
+      {label:"V-Dem Country Data v13",url:"https://www.v-dem.net/data/the-v-dem-dataset/",note:"Electoral, liberal and participatory democracy indices"},
+      {label:"Freedom House: Freedom in the World 2023",url:"https://freedomhouse.org/report/freedom-world",note:"Civil liberties and political rights ratings"}
+    ],
+    legitimacy: [
+      {label:"Afrobarometer Round 9 (2021-2023)",url:"https://www.afrobarometer.org/data/",note:"Survey-based trust, satisfaction and perceived-corruption indicators. Not all countries surveyed in the same year; some estimates draw from Round 8."}
+    ],
+    sovereignty: [
+      {label:"IMF Country Information",url:"https://www.imf.org/en/countries",note:"Programme participation and conditionality history"},
+      {label:"SIPRI Military Expenditure Database",url:"https://www.sipri.org/databases/milex",note:"Foreign military presence assessment"},
+      {label:"EITI Extractive Industries Transparency",url:"https://eiti.org/countries",note:"Resource revenue transparency and domestic vs foreign control"},
+      {label:"World Bank ODA Data",url:"https://data.worldbank.org/indicator/DT.ODA.ODAT.GN.ZS",note:"Official development assistance as % of GNI"}
+    ]
+  };
+});
+
+// === BIAS PRESETS ===
+var BIAS_PRESETS = {
+  balanced:    {key:'balanced',   label:'A. Balanced baseline',          p:33, l:34, s:33,  desc:'Equal weight across all three axes. The neutral starting point - no dimension is privileged.'},
+  procedural:  {key:'procedural', label:'B. Procedural-only',            p:100,l:0,  s:0,   desc:'Replicates existing democracy indices that measure only institutional form. This is the reference baseline - all rank shifts in other presets are measured from here.'},
+  legitimacy:  {key:'legitimacy', label:'C. Legitimacy-adjusted',        p:40, l:40, s:20,  desc:'Elevates citizen experience alongside institutional form. Tests whether the procedural picture matches how populations actually experience governance.'},
+  sovereignty: {key:'sovereignty',label:'D. Sovereignty-adjusted',       p:35, l:20, s:45,  desc:'Prioritises fiscal and political autonomy. Tests whether high procedural scores cluster with Western dependency - suggesting the standard indices may measure alignment rather than quality.'},
+  antidep:     {key:'antidep',    label:'E. Anti-dependency stress test', p:20, l:30, s:50,  desc:'Maximum weight on sovereignty and legitimacy. The most aggressive test of the dependency hypothesis. Reveals which countries are most penalised by standard procedural-only scoring.'}
+};
+
+var AXIS_LABELS = {
+  procedural:'Procedural Democracy',
+  legitimacy:'Citizen Legitimacy',
+  sovereignty:'Sovereignty Score',
+  composite:'Weighted Composite'
+};
+
+// === STATE ===
+var state = { weights:{p:33,l:34,s:33}, xAxis:'procedural', yAxis:'sovereignty', quadMode:'selected', biasPreset:'balanced', selC:null, hovC:null };
+var PAD   = {top:36,right:32,bottom:46,left:50};
+var canvas = document.getElementById('scatter');
+var ctx    = canvas.getContext('2d');
+var tooltipEl = document.getElementById('tooltip');
+
+// === HELPERS: scoring ===
+function getAxisValue(c, key) {
+  if (key === 'composite') return getWeightedScore(c, state.weights);
+  return c[key];
+}
+function getWeightedScore(c, w) {
+  var t = (w.p + w.l + w.s) || 1;
+  return (c.procedural * w.p + c.legitimacy * w.l + c.sovereignty * w.s) / t;
+}
+
+// === HELPERS: ranking ===
+function getCurrentRanking(w) {
+  return countries.slice()
+    .map(function(c) { return {name:c.name, score:getWeightedScore(c, w)}; })
+    .sort(function(a,b) { return b.score - a.score; })
+    .map(function(c,i) { return {name:c.name, score:c.score, rank:i+1}; });
+}
+function getProceduralOnlyRanking() { return getCurrentRanking({p:100,l:0,s:0}); }
+function getRankShift(name, fromR, toR) {
+  var fr = fromR.find(function(r){return r.name===name;});
+  var tr = toR.find(function(r){return r.name===name;});
+  if (!fr || !tr) return 0;
+  return fr.rank - tr.rank;
+}
+function describeRankShift(shift) {
+  if (shift >= 6)  return 'Rises sharply when sovereignty/legitimacy is weighted';
+  if (shift >= 3)  return 'Rises moderately under current weighting';
+  if (shift >= 1)  return 'Slightly higher under current weighting';
+  if (shift === 0) return 'Largely stable across frameworks';
+  if (shift >= -2) return 'Slightly lower under current weighting';
+  if (shift >= -5) return 'Ranks lower once sovereignty is counted';
+  return 'Falls sharply under non-procedural weighting';
+}
+
+// === HELPERS: quadrant ===
+function getQuadrant(c, mode, w) {
+  var x, y;
+  if (mode === 'composite-sov')  { x = getWeightedScore(c,w); y = c.sovereignty; }
+  else if (mode === 'composite-legit') { x = getWeightedScore(c,w); y = c.legitimacy; }
+  else { x = getAxisValue(c, state.xAxis); y = getAxisValue(c, state.yAxis); }
+  return (x>=5?'H':'L') + 'X' + (y>=5?'H':'L') + 'Y';
+}
+
+// === HELPERS: correlation ===
+function pearsonCorrelation(xs, ys) {
+  var n = xs.length;
+  if (n < 2) return 0;
+  var mx = xs.reduce(function(a,b){return a+b;},0)/n;
+  var my = ys.reduce(function(a,b){return a+b;},0)/n;
+  var num=0, dx2=0, dy2=0;
+  for (var i=0;i<n;i++) { num+=(xs[i]-mx)*(ys[i]-my); dx2+=(xs[i]-mx)*(xs[i]-mx); dy2+=(ys[i]-my)*(ys[i]-my); }
+  var d = Math.sqrt(dx2*dy2);
+  return d===0 ? 0 : num/d;
+}
+function updateCorrelation() {
+  var xs = countries.map(function(c){return getAxisValue(c,state.xAxis);});
+  var ys = countries.map(function(c){return getAxisValue(c,state.yAxis);});
+  var r  = pearsonCorrelation(xs, ys);
+  var el     = document.getElementById('corrVal');
+  var interp = document.getElementById('corrInterp');
+  var lbl    = document.getElementById('corrLabel');
+  lbl.textContent = AXIS_LABELS[state.xAxis].split(' ')[0] + ' \u2194 ' + AXIS_LABELS[state.yAxis].split(' ')[0];
+  el.textContent  = r.toFixed(2);
+  el.style.color  = r < -0.3 ? 'var(--terra)' : r < 0 ? 'var(--gold)' : 'var(--forest)';
+  if      (r <= -0.40) { interp.textContent='Strong negative'; interp.className='corr-interp strong-neg'; }
+  else if (r <= -0.10) { interp.textContent='Weak negative';   interp.className='corr-interp weak-neg'; }
+  else if (r <   0.10) { interp.textContent='Near zero';       interp.className='corr-interp neutral'; }
+  else if (r <   0.40) { interp.textContent='Weak positive';   interp.className='corr-interp weak-pos'; }
+  else                 { interp.textContent='Strong positive';  interp.className='corr-interp strong-pos'; }
+}
+
+// === HELPERS: sources ===
+function renderSourcesBlock(arr) {
+  if (!arr || !arr.length) return '';
+  return arr.map(function(s) {
+    return '<div class="src-item"><a href="'+s.url+'" target="_blank" rel="noopener" class="src-link">'+s.label+'</a><div class="src-note">'+s.note+'</div></div>';
+  }).join('');
+}
+
+// === HELPERS: display ===
+function dotColor(c) {
+  if (c.anchor)            return '#1a1714';
+  if (c.regime==='full')   return '#c8881a';
+  if (c.regime==='flawed') return '#d4941f';
+  if (c.regime==='hybrid') return '#e8a838';
+  return '#b5402a';
+}
+function regimeLabel(r) { return ({full:'Full Democracy',flawed:'Flawed Democracy',hybrid:'Hybrid Regime',auth:'Authoritarian'})[r]||r; }
+function regimeBg(r) { return ({full:{bg:'#e8f5ec',c:'#2d6e3e'},flawed:{bg:'#fef3dc',c:'#c8881a'},hybrid:{bg:'#fef3dc',c:'#c8881a'},auth:{bg:'#fdeee9',c:'#b5402a'}})[r]||{bg:'var(--bg3)',c:'var(--text-3)'}; }
+function quadTagInfo(c) {
+  var hiP=c.procedural>=5, hiS=c.sovereignty>=5;
+  if (hiP&&hiS) return {label:'High procedural \u00b7 High sovereignty',bg:'var(--sov-bg)',col:'var(--sov)'};
+  if (hiP)      return {label:'High procedural \u00b7 Low sovereignty', bg:'var(--proc-bg)',col:'var(--proc)'};
+  if (hiS)      return {label:'Low procedural \u00b7 High sovereignty', bg:'var(--legit-bg)',col:'var(--legit)'};
+  return               {label:'Low procedural \u00b7 Low sovereignty',  bg:'var(--bg3)',col:'var(--text-3)'};
+}
+function indHtml(key, val, label, countryName) {
+  var cls='iv-mid', txt=String(val);
+  if (key==='cfa')          { cls=val?'iv-bad':'iv-good'; txt=val?'Member (dependent)':'Independent'; }
+  else if (key==='imf')     { cls=val===true?'iv-bad':val==='partial'?'iv-mid':'iv-good'; txt=val===true?'Active programme':val==='partial'?'Occasional':'None'; }
+  else if (key==='milBase') { cls=val?'iv-bad':'iv-good'; txt=val?'Present':'None'; }
+  else if (key==='resourceCtrl') { cls=val==='yes'?'iv-good':val==='partial'?'iv-mid':'iv-bad'; txt=val==='yes'?'Domestic':val==='partial'?'Mixed':'Foreign'; }
+  else if (key==='aidDep')  { cls=(val==='none'||val==='low')?'iv-good':val==='medium'?'iv-mid':'iv-bad'; txt=val==='none'?'None / rejected':val.charAt(0).toUpperCase()+val.slice(1); }
+
+  var deep = INDICATOR_DEEP[key];
+  if (!deep) return '<div class="ind-item"><div class="ind-key">'+label+'</div><div class="ind-val '+cls+'">'+txt+'</div></div>';
+
+  var safeId = 'acc-'+key+'-'+(countryName||'').replace(/[^a-zA-Z]/g,'');
+  var vYear  = deep.vintageYear || 2023;
+  var vCls   = vintageClass(vYear);
+  var vLbl   = vintageLabel(vYear);
+
+  // Build comparison bar
+  var cmpData = deep.compare ? deep.compare(countryName) : null;
+  var cmpHtml = '';
+  if (cmpData) {
+    var barPct = cmpData.pct || 0;
+    cmpHtml = '<div class="ind-acc-compare">'
+      +'<span class="ind-acc-compare-label">'+cmpData.label+'</span>'
+      +'<div class="ind-acc-bar-wrap"><div class="ind-acc-bar mid" style="width:'+barPct+'%"></div></div>'
+      +'<span class="ind-acc-stat">'+cmpData.count+'/'+cmpData.total+' ('+barPct+'%)</span>'
+      +'</div>'
+      +(cmpData.extra ? '<div style="font-size:10px;color:var(--text-3);margin-bottom:6px">'+cmpData.extra+'</div>' : '');
+  }
+
+  return '<div class="ind-item clickable" onclick="toggleIndicator(\''+key+'\',\''+countryName+'\');">'
+    +'<div class="ind-key">'+label+' <span class="vintage-badge '+vCls+'">'+vLbl+'</span></div>'
+    +'<div class="ind-val '+cls+'">'+txt+'</div>'
+    +'<div class="ind-expand-hint">&#9660; tap to expand</div>'
+    +'<div class="ind-accordion" id="'+safeId+'">'
+    +'<div class="ind-acc-body">'+deep.intro+'</div>'
+    +cmpHtml
+    +'<a href="'+deep.sourceUrl+'" target="_blank" rel="noopener" class="ind-acc-src">&#8599; '+deep.sourceLabel+'</a>'
+    +'</div>'
+    +'</div>';
+}
+
+// === WEIGHTS ===
+function adjustWeights(changedKey, newVal) {
+  newVal = Math.max(0, Math.min(100, Math.round(newVal)));
+  var others = ['p','l','s'].filter(function(k){return k!==changedKey;});
+  var remaining = 100 - newVal;
+  var otherSum  = state.weights[others[0]] + state.weights[others[1]];
+  if (otherSum === 0) {
+    state.weights[others[0]] = Math.floor(remaining/2);
+    state.weights[others[1]] = remaining - state.weights[others[0]];
+  } else {
+    var a = Math.round(state.weights[others[0]] / otherSum * remaining);
+    state.weights[others[0]] = a;
+    state.weights[others[1]] = remaining - a;
+  }
+  state.weights[changedKey] = newVal;
+  state.biasPreset = 'custom';
+  syncWeightUI();
+  // Auto-switch to composite axes so weight changes are visually reflected
+  if (state.xAxis !== 'composite' || state.yAxis !== 'composite') {
+    // Remember previous selection before overriding
+    if (!state._prevAxes) state._prevAxes = {x: state.xAxis, y: state.yAxis};
+    state.xAxis = 'composite';
+    // Y: keep sovereignty unless it was already composite
+    if (state.yAxis === 'composite') state.yAxis = 'sovereignty';
+    document.getElementById('xAxis').value = 'composite';
+    document.getElementById('yAxis').value = state.yAxis;
+    var note = document.getElementById('compositeNote');
+    if (note) note.classList.add('visible');
+  }
+  updateAll();
+}
+function syncWeightUI() {
+  document.getElementById('wProc').value  = state.weights.p;
+  document.getElementById('wLegit').value = state.weights.l;
+  document.getElementById('wSov').value   = state.weights.s;
+  document.getElementById('wProcVal').textContent  = state.weights.p+'%';
+  document.getElementById('wLegitVal').textContent = state.weights.l+'%';
+  document.getElementById('wSovVal').textContent   = state.weights.s+'%';
+}
+function applyBiasPreset(key) {
+  var preset = BIAS_PRESETS[key];
+  if (!preset) return;
+  state.weights = {p:preset.p, l:preset.l, s:preset.s};
+  state.biasPreset = key;
+  syncWeightUI();
+  document.querySelectorAll('.bias-preset-btn').forEach(function(btn){btn.classList.toggle('active',btn.dataset.key===key);});
+  // Auto-switch to composite so weight effects show visually on scatter
+  if (key !== 'procedural' && state.xAxis !== 'composite') {
+    if (!state._prevAxes) state._prevAxes = {x:state.xAxis, y:state.yAxis};
+    state.xAxis = 'composite';
+    if (state.yAxis === 'composite') state.yAxis = 'sovereignty';
+    document.getElementById('xAxis').value = 'composite';
+    document.getElementById('yAxis').value = state.yAxis;
+    var note = document.getElementById('compositeNote'); if (note) note.classList.add('visible');
+  } else if (key === 'procedural') {
+    state.xAxis = 'procedural'; state.yAxis = 'sovereignty';
+    document.getElementById('xAxis').value = 'procedural';
+    document.getElementById('yAxis').value = 'sovereignty';
+    var note = document.getElementById('compositeNote'); if (note) note.classList.remove('visible');
+  }
+  updateAll();
+}
+
+// === RENDER: scatter ===
+function drawScatter() {
+  var dpr  = window.devicePixelRatio || 1;
+  var rect = canvas.getBoundingClientRect();
+  canvas.width  = rect.width * dpr;
+  canvas.height = rect.height * dpr;
+  ctx.scale(dpr, dpr);
+  var W=rect.width, H=rect.height, iW=W-PAD.left-PAD.right, iH=H-PAD.top-PAD.bottom;
+  function px(v){return PAD.left+(v/10)*iW;}
+  function py(v){return PAD.top+iH-(v/10)*iH;}
+  ctx.clearRect(0,0,W,H);
+  ctx.strokeStyle='rgba(0,0,0,0.05)'; ctx.lineWidth=1;
+  for (var i=0;i<=10;i+=2){ctx.beginPath();ctx.moveTo(px(i),PAD.top);ctx.lineTo(px(i),H-PAD.bottom);ctx.stroke();ctx.beginPath();ctx.moveTo(PAD.left,py(i));ctx.lineTo(W-PAD.right,py(i));ctx.stroke();}
+  ctx.strokeStyle='rgba(0,0,0,0.12)'; ctx.setLineDash([4,5]);
+  ctx.beginPath();ctx.moveTo(px(5),PAD.top);ctx.lineTo(px(5),H-PAD.bottom);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(PAD.left,py(5));ctx.lineTo(W-PAD.right,py(5));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(0,0,0,0.35)'; ctx.font='11px "DM Sans"';
+  for (var j=0;j<=10;j+=2){ctx.textAlign='center';ctx.fillText(j,px(j),H-PAD.bottom+16);ctx.textAlign='right';ctx.fillText(j,PAD.left-8,py(j)+4);}
+  ctx.fillStyle='rgba(0,0,0,0.45)'; ctx.font='11px "DM Sans"';
+  ctx.textAlign='center'; ctx.fillText(AXIS_LABELS[state.xAxis]+' \u2192',W/2,H-6);
+  ctx.save(); ctx.translate(13,H/2); ctx.rotate(-Math.PI/2); ctx.fillText('\u2191 '+AXIS_LABELS[state.yAxis],0,0); ctx.restore();
+  countries.forEach(function(c){
+    var xv=getAxisValue(c,state.xAxis), yv=getAxisValue(c,state.yAxis);
+    var cx=px(xv), cy=py(yv);
+    var isSel=state.selC&&state.selC.name===c.name;
+    var isHov=state.hovC&&state.hovC.name===c.name;
+    var r=c.anchor?7:5; var col=dotColor(c);
+    if(isSel||isHov){ctx.beginPath();ctx.arc(cx,cy,r+9,0,Math.PI*2);ctx.fillStyle=col+'22';ctx.fill();}
+    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle=col;ctx.globalAlpha=isSel?1:(isHov?0.9:0.75);ctx.fill();ctx.globalAlpha=1;
+    if(c.anchor||isSel||isHov){ctx.strokeStyle=isSel?col:'rgba(0,0,0,0.25)';ctx.lineWidth=isSel?2:1.5;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();}
+    if(c.anchor||isSel){ctx.fillStyle=isSel?col:'rgba(0,0,0,0.55)';ctx.font=isSel?'600 11px "DM Sans"':'500 10px "DM Sans"';ctx.textAlign='center';ctx.fillText(c.name,cx,cy-r-5);}
+  });
+}
+
+function getAt(mx, my) {
+  var rect=canvas.getBoundingClientRect(), W=rect.width, H=rect.height;
+  var iW=W-PAD.left-PAD.right, iH=H-PAD.top-PAD.bottom;
+  function px(v){return PAD.left+(v/10)*iW;} function py(v){return PAD.top+iH-(v/10)*iH;}
+  for(var i=0;i<countries.length;i++){
+    var c=countries[i];
+    if(Math.hypot(mx-px(getAxisValue(c,state.xAxis)),my-py(getAxisValue(c,state.yAxis)))<(c.anchor?10:8))return c;
+  }
+  return null;
+}
+
+function updateQuadLabels() {
+  var mode=state.quadMode, xLbl, yLbl;
+  if(mode==='composite-sov'){xLbl='Composite';yLbl='Sovereignty';}
+  else if(mode==='composite-legit'){xLbl='Composite';yLbl='Legitimacy';}
+  else{xLbl=AXIS_LABELS[state.xAxis].split(' ')[0];yLbl=AXIS_LABELS[state.yAxis].split(' ')[0];}
+  document.getElementById('qlTL').innerHTML='Low '+xLbl+'<br>High '+yLbl;
+  document.getElementById('qlTR').innerHTML='High '+xLbl+'<br>High '+yLbl;
+  document.getElementById('qlBL').innerHTML='Low '+xLbl+'<br>Low '+yLbl;
+  document.getElementById('qlBR').innerHTML='High '+xLbl+'<br>Low '+yLbl;
+}
+function updateQuadMode() {
+  var prev={};
+  countries.forEach(function(c){prev[c.name]=getQuadrant(c,state.quadMode,state.weights);});
+  state.quadMode=document.getElementById('quadMode').value;
+  var shifts=0;
+  countries.forEach(function(c){if(getQuadrant(c,state.quadMode,state.weights)!==prev[c.name])shifts++;});
+  var el=document.getElementById('quadShift');
+  if(shifts>0){el.textContent=shifts+' countr'+(shifts===1?'y':'ies')+' changed quadrant';el.classList.add('visible');}
+  else{el.classList.remove('visible');}
+  updateQuadLabels(); drawScatter();
+}
+
+// === RENDER: profile ===
+function renderProfile(c) {
+  document.getElementById('onboard').style.display='none';
+  var el=document.getElementById('profileContent'); el.style.display='block';
+  var q=quadTagInfo(c), rb=regimeBg(c.regime);
+  var procR=getProceduralOnlyRanking(), currR=getCurrentRanking(state.weights);
+  var procRank=procR.find(function(r){return r.name===c.name;}).rank;
+  var currRank=currR.find(function(r){return r.name===c.name;}).rank;
+  var shift=getRankShift(c.name,procR,currR);
+  var wScore=getWeightedScore(c,state.weights).toFixed(1);
+  var shiftStr=(shift>0?'+':'')+shift;
+  var shiftCol=shift>0?'var(--forest)':shift<0?'var(--terra)':'var(--text-3)';
+  var p=[];
+  p.push('<div class="fade-in">');
+  p.push('<div class="profile-country-name">'+c.name+'</div>');
+  p.push('<div class="profile-region">'+c.region+'</div>');
+  p.push('<div class="quadrant-tag" style="background:'+q.bg+';color:'+q.col+'"><span style="width:7px;height:7px;border-radius:50%;background:'+q.col+';display:inline-block"></span>'+q.label+'</div>');
+  var axes3=[{k:'procedural',l:'Procedural Democracy',c:'var(--proc)'},{k:'legitimacy',l:'Citizen Legitimacy',c:'var(--legit)'},{k:'sovereignty',l:'Sovereignty Score',c:'var(--sov)'}];
+  axes3.forEach(function(ax){
+    p.push('<div class="score-block"><div class="score-header"><span class="score-label"><span style="width:8px;height:8px;border-radius:50%;background:'+ax.c+';display:inline-block"></span>'+ax.l+'</span><span class="score-value" style="color:'+ax.c+'">'+c[ax.k]+'</span></div><div class="score-track"><div class="score-fill" style="width:'+c[ax.k]*10+'%;background:'+ax.c+'"></div></div></div>');
+  });
+  p.push('<div class="rank-box"><div class="rank-box-title">Rankings under current weights ('+state.weights.p+'P / '+state.weights.l+'L / '+state.weights.s+'S)</div>');
+  p.push('<div class="rank-row"><span class="rank-key">Weighted composite score</span><span class="rank-val">'+wScore+'</span></div>');
+  p.push('<div class="rank-row"><span class="rank-key">Current rank</span><span class="rank-val">#'+currRank+' / 30</span></div>');
+  p.push('<div class="rank-row"><span class="rank-key">Procedural-only rank</span><span class="rank-val">#'+procRank+' / 30</span></div>');
+  p.push('<div class="rank-row"><span class="rank-key">Rank shift</span><span class="rank-val" style="color:'+shiftCol+'">'+shiftStr+'</span></div>');
+  p.push('<div class="rank-shift-desc">'+describeRankShift(shift)+'</div></div>');
+  p.push('<hr class="profile-divider"><div class="section-label">Analysis</div><div class="narrative">'+c.narrative+'</div>');
+  // Layered insight toggle for mixed audiences
+  p.push('<div class="insight-layer">'
+    +'<button class="insight-layer-toggle" onclick="toggleDeepInsight(this)"><span class="toggle-icon">&#9654;</span> For researchers: methodology note on this country&rsquo;s scores</button>'
+    +'<div class="insight-deep">'
+    +'<strong>Score construction notes:</strong> Procedural score aggregates EIU Democracy Index (weighted 40%), V-Dem Electoral Democracy Index (35%), and Freedom House PR+CL average (25%) for '+c.name+'. '
+    +'Legitimacy score derives primarily from Afrobarometer Round 9 national averages on questions AB18 (trust in government), AB44 (corruption), and AB79 (satisfaction with democracy). '
+    +'Sovereignty score is a constructed composite: CFA membership (\u22120.8), active IMF programme (\u22120.5), foreign military base (\u22120.7), foreign resource control (\u22120.9), and aid dependency band (0 to \u22121.0). '
+    +'All scores are scaled 0\u201310. Treat as indicative ranges, not precise measurements.'
+    +'</div></div>');
+  p.push('<hr class="profile-divider"><div class="section-label">Dependency Indicators</div><div class="ind-grid">');
+
+  p.push(indHtml('cfa',c.indicators.cfa,'CFA Franc',c.name));
+  p.push(indHtml('imf',c.indicators.imf,'IMF Programme',c.name));
+  p.push(indHtml('milBase',c.indicators.milBase,'Foreign Military',c.name));
+  p.push(indHtml('resourceCtrl',c.indicators.resourceCtrl,'Resource Control',c.name));
+  var av=c.indicators.aidDep;
+  var ac=(av==='none'||av==='low')?'iv-good':av==='medium'?'iv-mid':'iv-bad';
+  var at=av==='none'?'None / rejected':av.charAt(0).toUpperCase()+av.slice(1);
+  p.push('<div class="ind-item" style="grid-column:1/-1"><div class="ind-key">Aid Dependency</div><div class="ind-val '+ac+'">'+at+'</div></div>');
+  p.push('</div>');
+  p.push('<div style="margin-top:12px"><div class="section-label">EIU Classification</div><div class="regime-badge" style="background:'+rb.bg+';color:'+rb.c+'">'+regimeLabel(c.regime)+'</div></div>');
+  p.push('<hr class="profile-divider"><div class="section-label">Sources &amp; Evidence</div><div class="src-section">');
+  p.push('<div class="src-group"><div class="src-group-label">Procedural score</div>'+renderSourcesBlock(c.sources.procedural)+'</div>');
+  p.push('<div class="src-group"><div class="src-group-label">Legitimacy score</div>'+renderSourcesBlock(c.sources.legitimacy)+'</div>');
+  p.push('<div class="src-group"><div class="src-group-label">Sovereignty indicators</div>'+renderSourcesBlock(c.sources.sovereignty)+'</div>');
+  p.push('</div></div>');
+  el.innerHTML=p.join('');
+}
+
+// === RENDER: compare ===
+function generateInsight(a, b) {
+  var gp=Math.abs(a.procedural-b.procedural), gl=Math.abs(a.legitimacy-b.legitimacy), gs=Math.abs(a.sovereignty-b.sovereignty);
+  var pair=[a.name,b.name].sort().join('|');
+  var named={
+    'Cameroon|Rwanda':{t:'The core argument, visualized',b:'Rwanda and Cameroon share nearly identical procedural scores - yet represent completely different political realities. Rwanda is an effective developmental state with authoritarian tendencies: high citizen legitimacy, high sovereignty, extraordinary development outcomes. Cameroon is a predatory kleptocracy insulated by Western diplomatic cover: low legitimacy, low sovereignty, Biya in power since 1982. A single composite score makes them indistinguishable. The three-axis model may expose what that number conceals.'},
+    'Eritrea|Mauritius':{t:'The two extremes of the sovereignty axis',b:"Mauritius and Eritrea define opposite ends of the sovereignty spectrum \u2014 and together they bracket the platform's central argument. Mauritius: maximum procedural democracy, maximum Western dependency. Eritrea: maximum sovereignty, minimum everything else. Neither is a model. Mauritius raises the question of whether its scores reflect democratic quality or structural alignment. Eritrea tests the romantic version of the sovereignty argument: sovereignty without popular legitimacy may just be authoritarianism with a different flag."},
+    'Eritrea|Mali':{t:'Two paths to high sovereignty',b:'Eritrea and Mali both score high on sovereignty \u2014 but through completely different mechanisms. Eritrea has been isolated from the international system since independence, with no foreign aid, no IMF, no NGOs. Mali\'s sovereignty score rose sharply after the 2023 coup expelled French forces and exited the CFA. The legitimacy scores reveal the human cost of each path \u2014 and highlight that sovereignty alone does not translate into citizen wellbeing.'},
+    'Botswana|Ghana':{t:'Similar democracies, divergent sovereignty',b:'Botswana and Ghana are procedurally among Africa\'s most comparable democracies - the procedural gap of '+gp.toFixed(1)+' points is not analytically significant on its own. The sovereignty gap ('+gs.toFixed(1)+' points) may matter more: Ghana entered a major IMF programme after its 2022 debt crisis and its gold and cocoa revenues are largely foreign-controlled. Botswana\'s Debswana partnership gives it more domestic resource leverage. Two similar procedural democracies, operating under very different external constraints.'},
+    "Burkina Faso|C\u00f4te d'Ivoire":{t:'The CFA split - a near-controlled experiment',b:"Burkina Faso and Cote d'Ivoire share a border, a colonial history, and until recently a currency. Since the coup, Burkina has exited the CFA and expelled French forces; its procedural score dropped but sovereignty score rose sharply. Cote d'Ivoire remains in the CFA, hosts a French military base, and maintains an IMF programme. This comparison is close to a controlled experiment in what the dependency relationship may produce in index scores."},
+    'Cameroon|Mauritius':{t:'Dependency without and with democracy',b:'Mauritius and Cameroon are both deeply Western-dependent - low sovereignty scores, IMF-aligned policies. But Mauritius has built genuine democratic institutions within that dependency; Cameroon has not. This comparison tests whether dependency is sufficient to explain democratic performance, or whether institutional agency still matters within constrained sovereignty.'}
+  };
+  if(named[pair]) return {title:named[pair].t, body:named[pair].b};
+  var allClose=gp<1.0&&gl<1.0&&gs<1.0;
+  var sovBig=gs>=gp&&gs>=gl, procBig=gp>=gs&&gp>=gl, legitBig=gl>=gp&&gl>=gs;
+  var bigger=function(k){return a[k]>b[k]?a:b;};
+  var smaller=function(k){return a[k]>b[k]?b:a;};
+  if(allClose){var maxG=Math.max(gp,gl,gs),dim=sovBig?'sovereignty':procBig?'procedural':'legitimacy';return{title:'Genuinely comparable cases',body:a.name+' and '+b.name+' score closely across all three axes (procedural gap: '+gp.toFixed(1)+', legitimacy gap: '+gl.toFixed(1)+', sovereignty gap: '+gs.toFixed(1)+'). The marginal divergence on '+dim+' ('+maxG.toFixed(1)+' points) is where the analytical action is.'};}
+  if(gp<1.0&&gs>1.5){return{title:'Similar democracies, divergent sovereignty',body:a.name+' and '+b.name+' score comparably on procedural democracy (gap: '+gp.toFixed(1)+') - but the sovereignty gap ('+gs.toFixed(1)+') may be the number that matters. '+bigger('sovereignty').name+' exercises greater fiscal and political autonomy; '+smaller('sovereignty').name+' operates under more external dependency constraints. This divergence is invisible in a standard democracy index.'};}
+  if(sovBig&&gs>2.0){return{title:'Sovereignty is the key divergence',body:'The '+gs.toFixed(1)+'-point sovereignty gap is the most significant divergence - larger than procedural ('+gp.toFixed(1)+') and legitimacy ('+gl.toFixed(1)+'). '+bigger('sovereignty').name+' operates with greater fiscal autonomy; '+smaller('sovereignty').name+' is more deeply integrated into external dependency relationships.'};}
+  if(procBig&&gp>2.0){var sovCmt=gs>1.5?'The sovereignty comparison ('+a.name+': '+a.sovereignty+' vs '+b.name+': '+b.sovereignty+') suggests this procedural difference may partly reflect differential alignment with Western institutions.':'Similar sovereignty scores point to genuine democratic divergence rather than a structural dependency effect.';return{title:'Procedural democracy gap',body:'The '+gp.toFixed(1)+'-point procedural gap is the most visible divergence - '+bigger('procedural').name+' scores significantly higher on electoral competition and civil liberties. '+sovCmt};}
+  if(legitBig&&gl>1.5){var ctx2=gp<1.0?'despite similar procedural scores, suggesting the institutional picture may mask a real difference in lived democratic experience.':'alongside the procedural gap, reinforcing that the differences here are substantive.';return{title:'The legitimacy gap',body:'The most significant divergence is on citizen legitimacy (gap: '+gl.toFixed(1)+') - what populations actually experience, rather than what institutions formally provide. This gap exists '+ctx2};}
+  // High proc, high sov — rare combination
+  if (a.procedural >= 5 && b.procedural >= 5 && a.sovereignty >= 5 && b.sovereignty >= 5) {
+    return {title:'Both high procedural AND high sovereignty', body:a.name+' and '+b.name+' are among the rarer cases in African politics: scoring above the midpoint on both procedural democracy and sovereignty. This combination challenges the platform\'s core hypothesis — or at minimum suggests that the dependency-democracy trade-off is not structurally inevitable. The legitimacy gap ('+gl.toFixed(1)+' points) is where meaningful divergence exists.'};
+  }
+  // Both authoritarian, different sovereignty
+  if (a.procedural < 4 && b.procedural < 4 && gs > 2) {
+    return {title:'Two authoritarianisms — different external relationships', body:'Both '+a.name+' and '+b.name+' score in the authoritarian procedural range — but their sovereignty profiles diverge by '+gs.toFixed(1)+' points. This comparison reveals something the standard indices cannot: authoritarian states are not a monolith. Some operate under heavy external dependency (insulated by strategic Western relationships); others assert genuine economic autonomy. The axis that distinguishes them is invisible in standard rankings.'};
+  }
+  // High legitimacy despite low procedure
+  if (Math.min(a.procedural,b.procedural) < 4 && Math.max(a.legitimacy,b.legitimacy) > 5.5) {
+    var highLeg = a.legitimacy > b.legitimacy ? a : b;
+    var lowProc = a.procedural < b.procedural ? a : b;
+    return {title:'The legitimacy-procedure gap', body:highLeg.name+' achieves relatively high citizen legitimacy ('+highLeg.legitimacy+') despite a low procedural score — the kind of divergence that challenges the assumption that institutional form predicts citizen experience. This is the Rwanda paradox writ large: populations may evaluate their governments on developmental delivery and perceived fairness rather than electoral competition. What constitutes democratic legitimacy from a citizen perspective may differ from what Western frameworks measure.'};
+  }
+  // CFA vs non-CFA comparison
+  if (a.indicators.cfa !== b.indicators.cfa && gp < 2) {
+    var cfaMember    = a.indicators.cfa ? a : b;
+    var cfaNonMember = a.indicators.cfa ? b : a;
+    return {title:'The CFA variable — a near-controlled experiment', body:'With similar procedural scores (gap: '+gp.toFixed(1)+'), '+cfaMember.name+' and '+cfaNonMember.name+' differ most clearly on CFA franc membership. '+cfaMember.name+' operates within the CFA monetary zone, depositing reserves with the French Treasury and surrendering independent monetary policy. '+cfaNonMember.name+' does not. The sovereignty gap ('+gs.toFixed(1)+' points) partly captures this difference. This comparison tests whether monetary dependency is reflected in the sovereignty score — and whether standard indices treat it as politically relevant.'};
+  }
+  // IMF vs no-IMF comparison
+  if (a.indicators.imf !== b.indicators.imf && gs > 1.5) {
+    var imfMember    = a.indicators.imf === true ? a : b;
+    var imfNonMember = a.indicators.imf === true ? b : a;
+    return {title:'IMF conditionality as a sovereignty variable', body:imfMember.name+' is under an active IMF structural adjustment or precautionary programme; '+imfNonMember.name+' is not. IMF programmes attach policy conditions — fiscal austerity targets, exchange rate commitments, structural reforms — that constrain domestic budget decisions. The sovereignty gap ('+gs.toFixed(1)+' points) captures some of this constraint. The procedural gap ('+gp.toFixed(1)+' points) suggests that '+(gp < 1.5 ? 'external fiscal constraints and democratic procedure can coexist in the short term — a key finding for the debt-democracy literature.' : 'IMF membership and procedural democracy scores may diverge, complicating simple narratives about Western alignment.')};
+  }
+  return{title:'A multidimensional divergence',body:a.name+' and '+b.name+' diverge across all three axes — procedural ('+gp.toFixed(1)+'), legitimacy ('+gl.toFixed(1)+'), sovereignty ('+gs.toFixed(1)+'). The platform\'s three-axis framework reveals tensions that a single composite score would obscure: one country may appear higher on standard indices while operating under deeper external constraints. Use the Bias Tests tab to see how the ranking gap changes under different normative weightings.'};
+}
+
+function renderCompare() {
+  var aName=document.getElementById('cmpA').value, bName=document.getElementById('cmpB').value;
+  var el=document.getElementById('compareContent');
+  if(!aName||!bName||aName===bName){el.innerHTML='<div style="color:var(--text-3);font-size:12px;margin-top:8px">Select two different countries to compare.</div>';return;}
+  var a=countries.find(function(c){return c.name===aName;}), b=countries.find(function(c){return c.name===bName;});
+  if(!a||!b)return;
+  var procR=getProceduralOnlyRanking(), currR=getCurrentRanking(state.weights);
+  var ins=generateInsight(a,b);
+  var p=['<div class="fade-in">'];
+  p.push('<div class="cmp-rank-box"><div class="cmp-rank-title">Rankings under current weights ('+state.weights.p+'P / '+state.weights.l+'L / '+state.weights.s+'S)</div><div class="cmp-rank-row">');
+  [a,b].forEach(function(cx){
+    var cr=currR.find(function(r){return r.name===cx.name;}).rank;
+    var pr=procR.find(function(r){return r.name===cx.name;}).rank;
+    var sh=getRankShift(cx.name,procR,currR);
+    var ss=(sh>0?'+':'')+sh, sc=sh>0?'var(--forest)':sh<0?'var(--terra)':'var(--text-3)';
+    p.push('<div class="cmp-rank-col"><div class="cmp-rank-name">'+cx.name+'</div>');
+    p.push('<div class="cmp-rank-line"><span>Weighted score</span><span>'+getWeightedScore(cx,state.weights).toFixed(1)+'</span></div>');
+    p.push('<div class="cmp-rank-line"><span>Current rank</span><span>#'+cr+'</span></div>');
+    p.push('<div class="cmp-rank-line"><span>Proc-only rank</span><span>#'+pr+'</span></div>');
+    p.push('<div class="cmp-rank-line"><span>Rank shift</span><span style="color:'+sc+'">'+ss+'</span></div></div>');
+  });
+  p.push('</div></div>');
+  var axes3=[{k:'procedural',l:'Procedural Democracy',c:'var(--proc)'},{k:'legitimacy',l:'Citizen Legitimacy',c:'var(--legit)'},{k:'sovereignty',l:'Sovereignty Score',c:'var(--sov)'}];
+  axes3.forEach(function(ax){
+    var gap=Math.abs(a[ax.k]-b[ax.k]);
+    p.push('<div class="cmp-axis-block"><div class="cmp-axis-label"><span style="width:7px;height:7px;border-radius:50%;background:'+ax.c+';display:inline-block"></span>'+ax.l+'</div>');
+    p.push('<div class="cmp-bar-row"><div class="cmp-bar-name">'+a.name+'</div><div class="cmp-bar-track"><div class="cmp-bar-fill" style="width:'+a[ax.k]*10+'%;background:'+ax.c+'"></div></div><div class="cmp-bar-num">'+a[ax.k]+'</div></div>');
+    p.push('<div class="cmp-bar-row"><div class="cmp-bar-name">'+b.name+'</div><div class="cmp-bar-track"><div class="cmp-bar-fill" style="width:'+b[ax.k]*10+'%;background:'+ax.c+';opacity:0.4"></div></div><div class="cmp-bar-num">'+b[ax.k]+'</div></div>');
+    p.push('<div class="cmp-gap-row"><span>gap</span><div class="cmp-gap-track"><div class="cmp-gap-fill" style="width:'+gap*10+'%;background:'+ax.c+'"></div></div><span style="color:'+ax.c+';font-size:11px;font-weight:600;min-width:28px;text-align:right">'+gap.toFixed(1)+'</span></div></div>');
+  });
+  p.push('<div class="cmp-insight"><div class="cmp-insight-title">'+ins.title+'</div><div class="cmp-insight-body">'+ins.body+'</div></div></div>');
+  el.innerHTML=p.join('');
+}
+
+// === RENDER: bias tests ===
+function computeBiasExplanation(c, shift, presetKey) {
+  var preset=BIAS_PRESETS[presetKey]; if(!preset)return '';
+  if(shift<0){
+    if(c.sovereignty<4&&preset.s>20)return 'Low sovereignty ('+c.sovereignty+') invisible in procedural-only scoring';
+    if(c.legitimacy<4&&preset.l>20)return 'High procedural score ('+c.procedural+') masks low citizen legitimacy ('+c.legitimacy+')';
+    return 'Procedural score ('+c.procedural+') may overstate democratic quality once dependency is weighted';
+  }else{
+    if(c.sovereignty>5.5&&preset.s>20)return 'Sovereignty ('+c.sovereignty+') rewarded here but invisible in standard rankings';
+    if(c.legitimacy>5.5&&preset.l>20)return 'Citizen legitimacy ('+c.legitimacy+') exceeds what procedural score ('+c.procedural+') suggests';
+    return 'Non-procedural strengths (legitimacy: '+c.legitimacy+', sovereignty: '+c.sovereignty+') suppressed in standard ranking';
+  }
+}
+function renderBiasTests() {
+  var preset=BIAS_PRESETS[state.biasPreset];
+  var pw=preset?{p:preset.p,l:preset.l,s:preset.s}:state.weights;
+  var procR=getProceduralOnlyRanking(), presetR=getCurrentRanking(pw);
+  var shifts=countries.map(function(c){
+    var pr=procR.find(function(r){return r.name===c.name;}).rank;
+    var tr=presetR.find(function(r){return r.name===c.name;}).rank;
+    return {c:c,procRank:pr,presetRank:tr,shift:pr-tr};
+  });
+  var isProcOnly=state.biasPreset==='procedural';
+  function rowHtml(item){
+    var s=item.shift, cls=s>0?'up':s<0?'dn':'flat', str=(s>0?'+':'')+s;
+    var expl=isProcOnly?'No shift - this is the procedural-only baseline':computeBiasExplanation(item.c,s,state.biasPreset);
+    return '<div class="bias-row"><div class="bias-rank-col">#'+item.procRank+'</div><div class="bias-name">'+item.c.name+'</div><div class="bias-shift '+cls+'">'+str+'</div><div class="bias-expl">'+expl+'</div></div>';
+  }
+  var over=shifts.slice().filter(function(x){return x.shift<-1;}).sort(function(a,b){return a.shift-b.shift;}).slice(0,5);
+  var under=shifts.slice().filter(function(x){return x.shift>1;}).sort(function(a,b){return b.shift-a.shift;}).slice(0,5);
+  var stable=shifts.slice().filter(function(x){return Math.abs(x.shift)<=1;}).sort(function(a,b){return getWeightedScore(b.c,pw)-getWeightedScore(a.c,pw);}).slice(0,4);
+  var plabel=preset?preset.label:'custom weights ('+state.weights.p+'P/'+state.weights.l+'L/'+state.weights.s+'S)';
+  var html='';
+  if(isProcOnly){
+    html='<div class="bias-same-note">Procedural-only is the reference baseline. All shifts are zero by definition - this is what standard indices effectively measure. Switch to another preset to see how rankings shift when different normative assumptions are applied.</div>';
+  }else{
+    html+='<div class="bias-section"><div class="bias-section-title">Most overrated by procedural-only (vs. '+plabel+')</div>';
+    html+=over.length===0?'<div class="bias-same-note">No countries rank more than 1 place lower under this preset.</div>':over.map(rowHtml).join('');
+    html+='</div>';
+    html+='<div class="bias-section"><div class="bias-section-title">Most underrated by procedural-only (vs. '+plabel+')</div>';
+    html+=under.length===0?'<div class="bias-same-note">No countries rank more than 1 place higher under this preset.</div>':under.map(rowHtml).join('');
+    html+='</div>';
+    html+='<div class="bias-section"><div class="bias-section-title">Stable cases (rank change &le;1)</div>';
+    html+=stable.length===0?'<div class="bias-same-note">All countries shift significantly under this preset.</div>':stable.map(rowHtml).join('');
+    html+='</div>';
+  }
+  if(preset){html+='<div class="bias-interp"><strong>What this preset tests</strong>'+preset.desc+'</div>';}
+  else{html+='<div class="bias-interp"><strong>Custom weighting</strong>Weights set manually: '+state.weights.p+'% procedural, '+state.weights.l+'% legitimacy, '+state.weights.s+'% sovereignty.</div>';}
+  document.getElementById('biasContent').innerHTML=html;
+}
+
+// === DOWNLOADS ===
+function downloadDataset() {
+  var data=countries.map(function(c){return {name:c.name,region:c.region,regime:c.regime,anchor:c.anchor,procedural:c.procedural,legitimacy:c.legitimacy,sovereignty:c.sovereignty,indicators:c.indicators,narrative:c.narrative,sources:c.sources};});
+  triggerDownload(JSON.stringify(data,null,2),'africa-democracy-sovereignty-index.json');
+}
+function downloadDataDictionary() {
+  var dict={description:"Africa Democracy & Sovereignty Index - Data Dictionary",version:"2024",scores:{procedural:{range:"0-10",description:"Institutional democracy: electoral competition, civil liberties, press freedom, government functioning.",sources:["EIU Democracy Index","V-Dem","Freedom House"]},legitimacy:{range:"0-10",description:"Citizen experience of governance: trust, satisfaction, perceived corruption, economic delivery.",sources:["Afrobarometer Round 9"]},sovereignty:{range:"0-10",description:"Constructed proxy index measuring fiscal and political autonomy. NOT a direct measurement.",warning:"This is a constructed index using five proxies. It is not a direct measurement.",proxies:["CFA franc membership","IMF programme history","Foreign military bases","Resource revenue control","Aid dependency ratio"],sources:["IMF Programs Database","SIPRI","EITI","World Bank ODA"]}},indicators:{cfa:{description:"CFA franc zone membership.",values:{true:"Member (dependent currency)",false:"Independent currency"}},imf:{description:"IMF programme participation.",values:{true:"Active programme",partial:"Occasional",false:"None"}},milBase:{description:"Foreign military base presence.",values:{true:"Present",false:"None"}},resourceCtrl:{description:"Domestic vs foreign resource revenue control.",values:{yes:"Primarily domestic",partial:"Mixed",no:"Primarily foreign"}},aidDep:{description:"ODA as share of national income.",values:{none:"Negligible",low:"ODA < 3% GNI",medium:"ODA 3-10% GNI",high:"ODA > 10% GNI"}}},regime:{description:"EIU Democracy Index regime classification",values:{full:"Full democracy (>=8)",flawed:"Flawed democracy (6-8)",hybrid:"Hybrid regime (4-6)",auth:"Authoritarian (<4)"}},caveats:["Sovereignty is proxy-based and constructed, not directly measured","Legitimacy depends on survey perception data with sampling limitations","Cross-country comparability is imperfect due to different data vintages","Scores should be treated as indicative ranges, not precise measurements","This platform tests a hypothesis - it does not prove it"]};
+  triggerDownload(JSON.stringify(dict,null,2),'africa-democracy-sovereignty-data-dictionary.json');
+}
+function triggerDownload(content, filename) {
+  var blob=new Blob([content],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;a.download=filename;a.click();URL.revokeObjectURL(url);
+}
+
+// === UPDATE ALL ===
+function updateAll() {
+  updateCorrelation(); updateQuadLabels(); drawScatter();
+  if(state.selC) renderProfile(state.selC);
+  var an=document.getElementById('cmpA').value, bn=document.getElementById('cmpB').value;
+  if(an&&bn&&an!==bn) renderCompare();
+  renderBiasTests();
+}
+
+// === EVENT HANDLERS ===
+canvas.addEventListener('mousemove',function(e){
+  var rect=canvas.getBoundingClientRect();
+  var mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  var c=getAt(mx,my); state.hovC=c; canvas.style.cursor=c?'pointer':'crosshair';
+  if(c){
+    tooltipEl.style.display='block';
+    var tx=mx+16, ty=my-10; if(tx+210>rect.width)tx=mx-220; if(ty<0)ty=0;
+    tooltipEl.style.left=tx+'px'; tooltipEl.style.top=ty+'px';
+    var procR=getProceduralOnlyRanking(), currR=getCurrentRanking(state.weights);
+    var shift=getRankShift(c.name,procR,currR);
+    var cls=shift>0?'up':shift<0?'dn':'flat';
+    tooltipEl.innerHTML='<div class="tt-name">'+c.name+'</div>'
+      +'<div class="tt-row"><span class="tt-key">Procedural</span><span class="tt-val" style="color:var(--proc)">'+c.procedural+'</span></div>'
+      +'<div class="tt-row"><span class="tt-key">Legitimacy</span><span class="tt-val" style="color:var(--legit)">'+c.legitimacy+'</span></div>'
+      +'<div class="tt-row"><span class="tt-key">Sovereignty</span><span class="tt-val" style="color:var(--sov)">'+c.sovereignty+'</span></div>'
+      +'<hr class="tt-divider">'
+      +'<div class="tt-row"><span class="tt-key">Composite</span><span class="tt-val">'+getWeightedScore(c,state.weights).toFixed(1)+'</span></div>'
+      +'<div class="tt-shift '+cls+'">'+describeRankShift(shift)+'</div>';
+  }else{tooltipEl.style.display='none';}
+  drawScatter();
+});
+canvas.addEventListener('mouseleave',function(){state.hovC=null;tooltipEl.style.display='none';drawScatter();});
+canvas.addEventListener('click',function(e){
+  var rect=canvas.getBoundingClientRect();
+  var c=getAt(e.clientX-rect.left,e.clientY-rect.top);
+  if(c){state.selC=c;renderProfile(c);switchTabByName('profile');drawScatter();setDeepLink(c.name);}
+});
+
+// === TABS & UTILS ===
+function switchTab(name,btn){
+  document.querySelectorAll('.panel-tab').forEach(function(t){t.classList.remove('active');});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active'); document.getElementById('tab-'+name).classList.add('active');
+  if(name==='bias') renderBiasTests();
+}
+function switchTabByName(name){
+  var names=['profile','compare','bias','method'];
+  document.querySelectorAll('.panel-tab').forEach(function(t,i){t.classList.toggle('active',names[i]===name);});
+  document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('tab-'+name).classList.add('active');
+}
+function closeOverlay(){document.getElementById('overlay').style.display='none';}
+function setSuggest(a,b){document.getElementById('cmpA').value=a;document.getElementById('cmpB').value=b;renderCompare();switchTabByName('compare');}
+function updateAxes(){
+  var xEl=document.getElementById('xAxis'), yEl=document.getElementById('yAxis');
+  state.xAxis=xEl.value; state.yAxis=yEl.value;
+  if(state.xAxis===state.yAxis){var opts=['procedural','legitimacy','sovereignty','composite'];state.yAxis=opts.find(function(o){return o!==state.xAxis;})||'sovereignty';yEl.value=state.yAxis;}
+  // User manually changed axes — clear composite note and prev memory
+  if(state.xAxis!=='composite'){ state._prevAxes=null; var note=document.getElementById('compositeNote'); if(note)note.classList.remove('visible'); }
+  updateAll();
+}
+function resetAll(){
+  state.weights={p:33,l:34,s:33};
+  state.xAxis=(state._prevAxes&&state._prevAxes.x)||'procedural';
+  state.yAxis=(state._prevAxes&&state._prevAxes.y)||'sovereignty';
+  state._prevAxes=null;
+  state.quadMode='selected'; state.biasPreset='balanced';
+  document.getElementById('xAxis').value=state.xAxis;
+  document.getElementById('yAxis').value=state.yAxis;
+  document.getElementById('quadMode').value='selected';
+  var note=document.getElementById('compositeNote'); if(note)note.classList.remove('visible');
+  syncWeightUI();
+  document.querySelectorAll('.bias-preset-btn').forEach(function(btn){btn.classList.toggle('active',btn.dataset.key==='balanced');});
+  updateAll();
+}
+
+// === INIT ===
+function populateCompare(){
+  var sorted=countries.slice().sort(function(a,b){return a.name.localeCompare(b.name);});
+  ['cmpA','cmpB'].forEach(function(id){
+    var sel=document.getElementById(id);
+    sorted.forEach(function(c){var o=document.createElement('option');o.value=c.name;o.textContent=c.name;sel.appendChild(o);});
+  });
+  document.getElementById('cmpA').value='Rwanda';document.getElementById('cmpB').value='Cameroon';renderCompare();
+}
+function buildBiasPresets(){
+  var strip=document.getElementById('biasPresetStrip');
+  Object.keys(BIAS_PRESETS).forEach(function(key){
+    var p=BIAS_PRESETS[key],btn=document.createElement('button');
+    btn.className='bias-preset-btn'+(key==='balanced'?' active':'');
+    btn.dataset.key=key;
+    btn.textContent=p.label+' ('+p.p+'P/'+p.l+'L/'+p.s+'S)';
+    btn.onclick=function(){applyBiasPreset(key);};
+    strip.appendChild(btn);
+  });
+}
+
+
+function toggleDeepInsight(btn) {
+  var deep = btn.parentElement.querySelector('.insight-deep');
+  var isOpen = deep.classList.contains('open');
+  deep.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+
+function dismissIntro(key) {
+  var el = document.getElementById('intro-' + key);
+  if (!el) return;
+  el.classList.add('dismissed');
+}
+function restoreDismissed() {
+  // Intentionally empty — intros always show on fresh page load
+}
+
+
+// === DEEP LINKING ===
+// Supports URL hashes like #rwanda, #cameroon to load a country profile on page open
+function applyDeepLink() {
+  var hash = window.location.hash.replace('#','').toLowerCase().trim();
+  if (!hash) return;
+  var match = countries.find(function(c) {
+    return c.name.toLowerCase().replace(/[^a-z]/g,'') === hash ||
+           c.name.toLowerCase() === hash;
+  });
+  if (match) {
+    state.selC = match;
+    renderProfile(match);
+    switchTabByName('profile');
+    drawScatter();
+  }
+}
+
+// Update hash when a country is clicked
+function setDeepLink(countryName) {
+  var slug = countryName.toLowerCase().replace(/[^a-z]/g,'');
+  if (history.replaceState) {
+    history.replaceState(null, '', '#' + slug);
+  }
+}
+
+window.addEventListener('resize',drawScatter);
+buildBiasPresets();
+updateQuadLabels();
+updateCorrelation();
+populateCompare();
+renderBiasTests();
+drawScatter();
+restoreDismissed();
+applyDeepLink();
+</script>
+</body>
+</html>
